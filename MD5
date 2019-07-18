@@ -1,0 +1,10 @@
+03eda72bbd96b79bc6c815d38339b3c5 *DESCRIPTION
+5cf389bd28cc31337675e509b334a124 *NAMESPACE
+946dff5ab5fb1edbaa563443a2d8b0e7 *R/ForestFit.R
+bf81dd42c755f0ca75ab28839b4ad60a *man/dmixture.Rd
+65ee55c6d6babb21b15b5112a105b15a *man/fitbayes.Rd
+d923837287d037a452ef8035ff283530 *man/fitgrouped.Rd
+9d8e71286e5bad5bf4f7fe5aef456840 *man/fitmixture.Rd
+c04ffaf6d768c43c17f42d49b356bacc *man/fitungrouped.Rd
+6d7ad53f07e77598958e8024c17f6ea1 *man/pmixture.Rd
+3789a141c243ea69400bcb0a2f9c604a *man/rmixture.Rd

@@ -1,0 +1,6 @@
+exportPattern("^[[:alpha:]]+")
+importFrom(cluster,"pam")
+importFrom(ars,"ars")
+importFrom("stats", "splinefun", "nlm", "na.omit", "cor", "var", "median", "quantile", "nlminb", "lm", "sd", "optim", "uniroot", "runif",
+           "dlnorm", "plnorm", "qlnorm", "dweibull", "pweibull", "dnorm", "pnorm", "qnorm", "dgamma", "pgamma", "rgamma","df", "pf",
+           "rf", "ks.test", "rmultinom", "rweibull", "integrate", "optimize")
