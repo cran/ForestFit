@@ -1,16 +1,16 @@
-\name{fitungrouped}
-\alias{fitungrouped}
+\name{fitWeibull}
+\alias{fitWeibull}
 \title{Estimating parameters of the Weibull distribution through classical methods}
 \description{Estimates the parameters of the two- and three-parameter Weibull model with pdf and cdf given by
 \deqn{f(x;\alpha,\beta,\theta)=\frac{\alpha}{\beta} \left(\frac{x-\theta}{\beta }\right)^{\alpha -1} \exp \biggl\{-\left(\frac{x-\theta}{\beta } \right)^{\alpha } \biggr\},}
 and
 \deqn{F(x;\alpha,\beta,\theta)=1- \exp \biggl\{-\left(\frac{x-\theta}{\beta } \right)^{\alpha } \biggr\},}
 where \eqn{x>\theta}, \eqn{\alpha > 0}, \eqn{\beta >0} and \eqn{-\infty<\theta<\infty}. Here, the parameters \eqn{\alpha}, \eqn{\beta}, and \eqn{\theta} are known in the literature as the shape, scale, and location, respectively. If \eqn{\theta=0}, then \eqn{f(x;\alpha,\beta)} and \eqn{F(x;\alpha,\beta)} in above are the pdf and cdf of a two-parameter Weibull distribution, respectively.}
-\usage{fitungrouped(mydata, location, method, starts)}
+\usage{fitWeibull(mydata, location, method, starts)}
 \arguments{
   \item{mydata}{Vector of observations}
   \item{starts}{Initial values for starting the iterative procedures such as Newton-Raphson.}
-  \item{location}{Either "TRUE" or "FALSE". If location="TRUE", the shift parameter will be considered; otherwise the shift parameter omitted.}
+  \item{location}{Either "TRUE" or "FALSE". If location="TRUE", then shift parameter will be considered; otherwise the shift parameter omitted.}
   \item{method}{Used method for estimating the parameters. In the two-parameter case, methods are
 "\code{greg1}" (for the method of generalized regression type 1),
 "\code{greg2}"  (for the method of generalized regression type 2),
@@ -19,12 +19,12 @@ where \eqn{x>\theta}, \eqn{\alpha > 0}, \eqn{\beta >0} and \eqn{-\infty<\theta<\
 "\code{mlm}" (for the method of logarithmic moment),
 "\code{moment}" (for the method of moment),
 "\code{pm}" (for the method of percentile),
-"\code{rank}"  (for the method of rank correlation,
+"\code{rank}"  (for the method of rank correlation),
 "\code{reg}" (for the method of least square),
 "\code{ustat}" (for the method of U-statistic),
 "\code{wml}"  (for the method of weighted ML), and
 "\code{wreg}" (for the method of weighted least square).
-For three-parameter case the methods are
+In three-parameter case the methods are
 "\code{mle}" (for the method of ML),
 "\code{modifiedmoment1}" (for the method of modified moment (MM) type 1),
 "\code{modifiedmoment2}" (for the method of MM type 2),
@@ -40,32 +40,31 @@ For three-parameter case the methods are
 }
 \details{
 For the method \code{wml}, all weights have been provided for sample size less that or equal to 100. This means that both methods \code{ml} and \code{wml} give the same estimates for samples of size larger than 100.}
-\value{A list of objects in two parts as
+\value{A list of objects in two parts given by the following:
 \enumerate{
 \item Estimated parameters for two- or three-parameter Weibull distribution.
-\item A sequence of goodness-of-fit statistics consist of Akaike Information Criterion (\code{AIC}), Consistent Akaike Information Criterion (\code{CAIC}), Bayesian Information Criterion (\code{BIC}), Hannan-Quinn information criterion (\code{HQIC}), Kolmogorov-Smirnov statistic (\code{KS}), Anderson Darling statistic (\code{AD}), Cram\'{e}er-von Misses statistic (\code{CM}), and log-likelihood statistic (\code{log.like}).}
+\item A sequence of goodness-of-fit measures consist of Akaike Information Criterion (\code{AIC}), Consistent Akaike Information Criterion (\code{CAIC}), Bayesian Information Criterion (\code{BIC}), Hannan-Quinn information criterion (\code{HQIC}), Anderson-Darling (\code{AD}), Cram\'{e}er-von Misses (\code{CVM}), Kolmogorov-Smirnov (\code{KS}), and log-likelihood (\code{log-likelihood}) statistics.}
 }
 \references{
-D. Cousineau. Nearly unbiased estimators for the three-parameter Weibull distribution with greater efficiency than the iterative likelihood method. \emph{British Journal of
-Mathematical and Statistical Psychology}, 62:167-191, 2009.
+R. C. H. Cheng and M. A. Stephens, 1989. A goodness-of-fit test using Moran's statistic with estimated parameters, \emph{Biometrika}, 76(2), 385-392.
 
-G. Cran. Moment estimators for the 3-parameter Weibull distribution. \emph{IEEE Transactions on Reliability}, 37(4):360-363, 1988.
+C. A. Clifford and B. Whitten, 1982. Modified maximum likelihood and modified moment estimators for the three-parameter Weibull distribution, \emph{Communication in Statistics-Theory and Methods}, 11(23), 2631-2656.
 
-J. R. Hosking. L-moments: analysis and estimation of distributions using linear combinations of order statistics. \emph{Journal of the royal statistical society. Series B}, 105-124, 1990.
+D. Cousineau, 2009. Nearly unbiased estimators for the three-parameter Weibull distribution with greater efficiency than the iterative likelihood method, \emph{British Journal of Mathematical and Statistical Psychology}, 62, 167-191.
 
-Y. M. Kantar. Generalized least squares and weighted least squares estimation methods for distributional parameters. \emph{REVSTAT-Statistical Journal}, 13(3):263-282, 2015.
+G. Cran, 1988. Moment estimators for the 3-parameter Weibull distribution, \emph{IEEE Transactions on Reliability}, 37(4), 360-363.
 
-M. Teimouri, and S. Nadarajah. A simple estimator for the Weibull shape parameter. \emph{International Journal of Structural Stability and Dynamics}, 12(2), 2395-402, 2012.
+J. R. Hosking, 1990. L-moments: analysis and estimation of distributions using linear combinations of order statistics, \emph{Journal of the Royal Statistical Society. Series B (Methodological)}, 52(1), 105-124.
 
-M. Teimouri, S. M. Hoseini, and S. Nadarajah. Comparison of estimation methods for the Weibull distribution. \emph{Statistics}, 47(1):93-109, 2013.
+Y. M. Kantar, 2015. Generalized least squares and weighted least squares estimation methods for distributional parameters, \emph{REVSTAT-Statistical Journal}, 13(3), 263-282.
 
-F.Wang and J. B. Keats. Improved percentile estimation for the two-parameter Weibull distribution. \emph{Microelectronics Reliability}, 35(6):883-892, 1995.
+M. Teimouri and S. Nadarajah, 2012. A simple estimator for the Weibull shape parameter, \emph{International Journal of Structural Stability and Dynamics}, 12(2), 2395-402.
 
-L. Zhang, M. Xie, and L. Tang. On weighted least squares estimation for the parameters of Weibull distribution. \emph{In Recent Advances in Reliability and Quality in Design}, 57-84, 2008.
+M. Teimouri, S. M. Hoseini, and S. Nadarajah, 2013. Comparison of estimation methods for the Weibull distribution, \emph{Statistics}, 47(1), 93-109.
 
-R. C. H. Cheng, and M. A. Stephens. A goodness-of-fit test using Moran's statistic with estimated parameters, \emph{Biometrika}, 76(2), 385-392, 1989.
+F. Wang and J. B. Keats, 1995. Improved percentile estimation for the two-parameter Weibull distribution, \emph{Microelectronics Reliability}, 35(6), 883-892.
 
-C. A. Clifford, and B. Whitten. Modified maximum likelihood and modified moment estimators for the three-parameter Weibull distribution, \emph{Communication in Statistics-Theory and Methods}, 11(23), 2631-2656, 1982.
+L. Zhang, M. Xie, and L. Tang, 2008. On Weighted Least Squares Estimation for the Parameters of Weibull Distribution. \emph{In: Pham H. (eds) Recent Advances in Reliability and Quality in Design}. Springer Series in Reliability Engineering. Springer, London.
 }
 \author{Mahdi Teimouri}
 %\note{}
@@ -73,8 +72,8 @@ C. A. Clifford, and B. Whitten. Modified maximum likelihood and modified moment 
 \examples{
 mydata<-rweibull(100,shape=2,scale=2)+3
 starts<-c(2,2,3)
-fitungrouped(mydata, "TRUE", "mps", starts)
-fitungrouped(mydata, "TRUE", "wml", starts)
-fitungrouped(mydata, "FALSE", "mlm", starts)
-fitungrouped(mydata, "FALSE", "ustat", starts)
+fitWeibull(mydata, "TRUE", "mps", starts)
+fitWeibull(mydata, "TRUE", "wml", starts)
+fitWeibull(mydata, "FALSE", "mlm", starts)
+fitWeibull(mydata, "FALSE", "ustat", starts)
 }
