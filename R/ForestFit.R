@@ -114,7 +114,7 @@ fitgrowth<-function(h,d,model,starts){
 fitmixturegrouped<-function(family,r,f,K,initial="FALSE",starts){
   m<-length(r)
   N<-50000
-  cri<-0.0001
+  cri<-0.0005
   h<-2
   eps<-1
   R<-r[m]-r[1]
@@ -1219,25 +1219,25 @@ dmixture<-function(x,g,K,param){
  # if (sum(param[1:K])!= 1){stop ("The weight vector must be added to one.")}
       y<-rep(NA,length(x));
   if(g=="birnbaum-saunders"){
-    den=function(x,par){a=par[1]; b=par[2]; ifelse(x==0,0,(sqrt(x/b)+sqrt(b/x))/(2*a*x)*dnorm((sqrt(x/b)-sqrt(b/x))/a))}
+      den=function(x,par){a=par[1]; b=par[2]; ifelse(x==0,0,(sqrt(b/x)+(b/x)^(3/2))/(2*a*b)*dnorm((sqrt(x/b)-sqrt(b/x))/a))}
     }
   if(g=="burr"){
-	den<-function(x,par){a=par[1];b=par[2];a*b*x^(a-1)*(1+x^a)^(-b-1)}
+	    den<-function(x,par){a=par[1];b=par[2];a*b*x^(a-1)*(1+x^a)^(-b-1)}
     }
   if(g=="chen"){
       den=function(x,par){a=par[1]; b=par[2]; a*b*x^(a-1)*exp(x^a)*exp(-b*(exp(x^a)-1))}
     }
   if(g=="f"){
-	den=function(x,par){df1=par[1]; df2=par[2]; df(x,df1,df2)}
+	    den=function(x,par){df1=par[1]; df2=par[2]; df(x,df1,df2)}
     }
   if(g=="frechet"){
-    den=function(x,par){a=par[1]; b=par[2]; ifelse(x==0,0,a*exp(-(x/b)^(-a))*(x/b)^(-a-1)/b)}
+      den=function(x,par){a=par[1]; b=par[2]; ifelse(x==0,0,a*exp(-(x/b)^(-a))*(x/b)^(-a-1)/b)}
     }
   if(g=="gamma"){
       den=function(x,par){a=par[1]; b=par[2]; dgamma(x,a,scale=b)}
     }
   if(g=="gompertz"){
-	den=function(x,par){a=par[1]; b=par[2]; b*exp(a*x)*exp(-(exp(a*x)-1)*b/a)}
+	    den=function(x,par){a=par[1]; b=par[2]; b*exp(a*x)*exp(-(exp(a*x)-1)*b/a)}
     }
   if(g=="log-logistic"){
       den=function(x,par){a=par[1]; b=par[2]; (a*b^(-a)*x^(a-1))/(((x/b)^a +1)^2)}
@@ -1278,13 +1278,13 @@ pmixture<-function(x,g,K,param){
       cum=function(x,par){a=par[1]; b=par[2]; pnorm((sqrt(x/b)-sqrt(b/x))/a)}
     }
   if(g=="burr"){
-	cum<-function(x,par){a=par[1];b=par[2];1-(1+x^a)^(-b)}
+	    cum<-function(x,par){a=par[1];b=par[2];1-(1+x^a)^(-b)}
     }
   if(g=="chen"){
-	cum=function(x,par){a=par[1]; b=par[2]; 1-exp(-b*(exp(x^a)-1))}
+	    cum=function(x,par){a=par[1]; b=par[2]; 1-exp(-b*(exp(x^a)-1))}
     }
   if(g=="f"){
-	cum=function(x,par){df1=par[1]; df2=par[2]; pf(x,df1,df2)}
+	    cum=function(x,par){df1=par[1]; df2=par[2]; pf(x,df1,df2)}
     }
   if(g=="frechet"){
       cum=function(x,par){a=par[1]; b=par[2]; exp(-(x/b)^(-a))}
@@ -1434,14 +1434,16 @@ return(y)
 }
 
 fitmixture<-function(x,family,K,initial="FALSE",starts){
-    n<-length(x)
-    N<-50000
-    cri<-0.0001
-    alpha.matrix<-beta.matrix<-lambda.matrix<-gamma.matrix<-p.matrix<-matrix(0,ncol=K,nrow=N)
-    eu<-eu2<-z<-tau.matrix<-s.pdf<-matrix(0,ncol=K,nrow=n)
-    d.single<-d.mix<-cdf0<-pdf0<-clustering<-y<-alpha<-beta<-delta<-gamma<-lambda<-portion<-c()
-    clust<-kmeans(x,K)
-if (family=="birnbaum-saunders"){
+n<-length(x)
+N<-50000
+cri<-0.0005
+von<-u<-anderson<-d.single<-d.mix<-cdf0<-pdf0<-clustering<-y<-alpha<-beta<-delta<-gamma<-lambda<-portion<-c()
+alpha.matrix<-beta.matrix<-lambda.matrix<-gamma.matrix<-p.matrix<-matrix(0,ncol=K,nrow=N)
+weight<-alpha<-beta2<-lambda<-delta<-Delta<-Gama<-rep(0,K)
+eu<-eu2<-z<-tau.matrix<-s.pdf<-matrix(0,ncol=K,nrow=n)
+clustering<-rep(0,n)
+clust<-kmeans(x,K,50,1,algorithm="Hartigan-Wong")
+  if (family=="birnbaum-saunders"){
   if (initial=="FALSE"){
     for  (i in 1:K){
       portion[i]<-sum(clust$cluster==i)/n
@@ -1462,7 +1464,7 @@ if (family=="birnbaum-saunders"){
       }
     }
   }
-  denbir<-function(x,par){(sqrt(x/par[2])+sqrt(par[2]/x))/(2*par[1]*x)*dnorm((sqrt(x/par[2])-sqrt(par[2]/x))/par[1])}
+  denbir<-function(x,par){(sqrt(par[2]/x)+(par[2]/x)^(3/2))/(2*par[1]*par[2])*dnorm((sqrt(x/par[2])-sqrt(par[2]/x))/par[1])}
   if(initial=="TRUE"){
     p.matrix[1,]<-starts[1:K]
     alpha.matrix[1,]<-starts[(K+1):(2*K)]
@@ -1473,15 +1475,14 @@ if (family=="birnbaum-saunders"){
     z[d]<-1
   }
   r<-1;eps<-1;
-  denbir<-function(x,par){(sqrt(x/par[2])+sqrt(par[2]/x))/(2*par[1]*x)*dnorm((sqrt(x/par[2])-sqrt(par[2]/x))/par[1])}
-	while (eps>cri & r<N){
-					  for (j in 1:K){
+  while ((eps>cri) && (r<N)){
+        for (j in 1:K){
 						hbir<-function(par,x){sum(-z[,j]*log(denbir(x,c(par[1],par[2]))))}
 						out<-suppressWarnings(nlminb(c(alpha.matrix[r,j],beta.matrix[r,j]),hbir,x=x)$par)
 						alpha.matrix[r+1,j]<-out[1]
 						beta.matrix[r+1,j]<-out[2]
 						s.pdf[,j]<-p.matrix[r,j]*denbir(x,c(alpha.matrix[r+1,j],beta.matrix[r+1,j]))
-					  }
+				}
 							    for (i in 1:n){
 									  tau.matrix[i,]<-s.pdf[i,]/sum(s.pdf[i,])
 										maxim<-tau.matrix[i,1]
@@ -1537,14 +1538,14 @@ if (family=="burr"){
 	  z[d]<-1
 	}
 	r<-1;eps<-1;
-	while (eps>cri & r<N){
-					  for (j in 1:K){
+	while ((eps>cri) && (r<N)){
+	      for (j in 1:K){
 						hburr<-function(par,x){sum(-z[,j]*log(denburr(x,c(par[1],par[2]))))}
 						out<-suppressWarnings(nlminb(c(alpha.matrix[r,j],beta.matrix[r,j]),hburr,x=x)$par)
 						alpha.matrix[r+1,j]<-out[1]
 						beta.matrix[r+1,j]<-out[2]
 						s.pdf[,j]<-p.matrix[r,j]*denburr(x,c(alpha.matrix[r+1,j],beta.matrix[r+1,j]))
-					  }
+				}
 							    for (i in 1:n){
 									      tau.matrix[i,]<-s.pdf[i,]/sum(s.pdf[i,])
 										maxim<-tau.matrix[i,1]
@@ -1574,9 +1575,9 @@ if (family=="chen"){
                portion[i]<-sum(clust$cluster==i)/n
                y<-sort(x[clust$cluster==i])
                nn<-length(y)
-		   y<-(y[2:nn]-min(y))
+		           y<-(y[2:nn]-min(y))
                sd.y<-(y-mean(y))/sd(y)
-    		   beta[i]<-ifelse(max(sd.y)<=1,-log(1-nn/(nn+.4))/(exp(1)-1),-log(1-length(sd.y[sd.y<=1])/length(sd.y))/(exp(1)-1))
+    		       beta[i]<-ifelse(max(sd.y)<=1,-log(1-nn/(nn+.4))/(exp(1)-1),-log(1-length(sd.y[sd.y<=1])/length(sd.y))/(exp(1)-1))
     	         alpha[i]<-abs(log(log(1-log(1-0.5)/beta[i]))/log(median(y)))
         }
 	alpha.matrix[1,]<-alpha
@@ -1599,14 +1600,14 @@ if (family=="chen"){
 	  z[d]<-1
 	}
 	r<-1;eps<-1;
-	while (eps>cri & r<N){
-					  for (j in 1:K){
+	while ((eps>cri) && (r<N)){
+	      for (j in 1:K){
 						hchen<-function(par,x){sum(-z[,j]*log(denchen(x,c(par[1],par[2]))))}
 						out<-suppressWarnings(nlminb(c(alpha.matrix[r,j],beta.matrix[r,j]),hchen,x=x)$par)
 						alpha.matrix[r+1,j]<-out[1]
 						beta.matrix[r+1,j]<-out[2]
 						s.pdf[,j]<-p.matrix[r,j]*denchen(x,c(alpha.matrix[r+1,j],beta.matrix[r+1,j]))
-					  }
+				}
 							    for (i in 1:n){
 									      tau.matrix[i,]<-s.pdf[i,]/sum(s.pdf[i,])
 										maxim<-tau.matrix[i,1]
@@ -1661,14 +1662,14 @@ if (family=="f"){
 	  z[d]<-1
 	}
 	r<-1;eps<-1;
-	while (eps>cri & r<N){
-					  for (j in 1:K){
+	while ((eps>cri) && (r<N)){
+	      for (j in 1:K){
 						hf<-function(par,x){sum(-z[,j]*log(denf(x,c(par[1],par[2]))))}
 						out<-suppressWarnings(nlminb(c(alpha.matrix[r,j],beta.matrix[r,j]),hf,x=x)$par)
 						alpha.matrix[r+1,j]<-out[1]
 						beta.matrix[r+1,j]<-out[2]
 						s.pdf[,j]<-p.matrix[r,j]*denf(x,c(alpha.matrix[r+1,j],beta.matrix[r+1,j]))
-					  }
+			  }
 							    for (i in 1:n){
 									      tau.matrix[i,]<-s.pdf[i,]/sum(s.pdf[i,])
 										maxim<-tau.matrix[i,1]
@@ -1732,14 +1733,14 @@ if (family=="frechet"){
 	  z[d]<-1
 	}
 	r<-1;eps<-1;
-	while (eps>cri & r<N){
-					  for (j in 1:K){
+	while ((eps>cri) && (r<N)){
+	      for (j in 1:K){
 						hfre<-function(par,x){sum(-z[,j]*log(denfre(x,c(par[1],par[2]))))}
 						out<-suppressWarnings(nlminb(c(alpha.matrix[r,j],beta.matrix[r,j]),hfre,x=x)$par)
 						alpha.matrix[r+1,j]<-out[1]
 						beta.matrix[r+1,j]<-out[2]
 						s.pdf[,j]<-p.matrix[r,j]*denfre(x,c(alpha.matrix[r+1,j],beta.matrix[r+1,j]))
-					  }
+				}
 							    for (i in 1:n){
 									    tau.matrix[i,]<-s.pdf[i,]/sum(s.pdf[i,])
 									    maxim<-tau.matrix[i,1]
@@ -1791,14 +1792,14 @@ if (family=="gamma"){
 	  z[d]<-1
 	}
 	r<-1;eps<-1;
-	while (eps>cri & r<N){
-					  for (j in 1:K){
+	while ((eps>cri) && (r<N)){
+	      for (j in 1:K){
 						hgam<-function(par,x){sum(-z[,j]*dgamma(x,shape=par[1],scale=par[2],log=TRUE))}
 						out<-suppressWarnings(nlminb(c(alpha.matrix[r,j],beta.matrix[r,j]),hgam,x=x)$par)
 						alpha.matrix[r+1,j]<-out[1]
 						beta.matrix[r+1,j]<-out[2]
 						s.pdf[,j]<-p.matrix[r,j]*dgamma(x,shape=alpha.matrix[r+1,j],scale=beta.matrix[r+1,j])
-					  }
+				}
 							    for (i in 1:n){
 									      tau.matrix[i,]<-s.pdf[i,]/sum(s.pdf[i,])
 										maxim<-tau.matrix[i,1]
@@ -1861,14 +1862,14 @@ if (family=="gompertz"){
 	  z[d]<-1
 	}
 	r<-1;eps<-1;
-	while (eps>cri & r<N){
-					  for (j in 1:K){
+	while ((eps>cri) && (r<N)){
+	      for (j in 1:K){
 						hgom<-function(par,x){sum(-z[,j]*log(dengom(x,c(par[1],par[2]))))}
 						out<-suppressWarnings(nlminb(c(alpha.matrix[r,j],beta.matrix[r,j]),hgom,x=x)$par)
 						alpha.matrix[r+1,j]<-out[1]
 						beta.matrix[r+1,j]<-out[2]
 						s.pdf[,j]<-p.matrix[r,j]*dengom(x,c(alpha.matrix[r+1,j],beta.matrix[r+1,j]))
-					  }
+				}
 							    for (i in 1:n){
 									      tau.matrix[i,]<-s.pdf[i,]/sum(s.pdf[i,])
 										maxim<-tau.matrix[i,1]
@@ -1922,14 +1923,14 @@ if (family=="log-logistic"){
 	  z[d]<-1
 	}
 	r<-1;eps<-1;
-	while (eps>cri & r<N){
-					  for (j in 1:K){
+	while ((eps>cri) && (r<N)){
+	      for (j in 1:K){
 						hlog<-function(par,x){sum(-z[,j]*log(denlog(x,c(par[1],par[2]))))}
 						out<-suppressWarnings(nlminb(c(alpha.matrix[r,j],beta.matrix[r,j]),hlog,x=x)$par)
 						alpha.matrix[r+1,j]<-out[1]
 						beta.matrix[r+1,j]<-out[2]
 						s.pdf[,j]<-p.matrix[r,j]*denlog(x,c(alpha.matrix[r+1,j],beta.matrix[r+1,j]))
-					  }
+				}
 							    for (i in 1:n){
 									      tau.matrix[i,]<-s.pdf[i,]/sum(s.pdf[i,])
 										maxim<-tau.matrix[i,1]
@@ -1982,16 +1983,16 @@ if (family=="log-normal"){
 	  z[d]<-1
 	}
 	r<-1;eps<-1;
-	while (eps>cri & r<N){
-					  for (j in 1:K){
+	while ((eps>cri) && (r<N)){
+	      for (j in 1:K){
 						hlogn<-function(par,x){sum(-z[,j]*dlnorm(x,meanlog=par[1],sdlog=par[2],log=TRUE))}
 						out<-suppressWarnings(nlminb(c(alpha.matrix[r,j],beta.matrix[r,j]),hlogn,x=x)$par)
 						alpha.matrix[r+1,j]<-out[1]
 						beta.matrix[r+1,j]<-out[2]
 						s.pdf[,j]<-p.matrix[r,j]*dlnorm(x,meanlog=alpha.matrix[r+1,j],sdlog=beta.matrix[r+1,j])
-					  }
+				}
 							    for (i in 1:n){
-									      tau.matrix[i,]<-s.pdf[i,]/sum(s.pdf[i,])
+									  tau.matrix[i,]<-s.pdf[i,]/sum(s.pdf[i,])
 										maxim<-tau.matrix[i,1]
 										count<-1
 											for (t in 1:K){
@@ -2049,14 +2050,14 @@ if (family=="lomax"){
 	  z[d]<-1
 	}
 	r<-1;eps<-1;
-	while (eps>cri & r<N){
-					  for (j in 1:K){
+	while ((eps>cri) && (r<N)){
+	       for (j in 1:K){
 						hlom<-function(par,x){sum(-z[,j]*log(denlom(x,c(par[1],par[2]))))}
 						out<-suppressWarnings(nlminb(c(alpha.matrix[r,j],beta.matrix[r,j]),hlom,x=x)$par)
 						alpha.matrix[r+1,j]<-out[1]
 						beta.matrix[r+1,j]<-out[2]
 						s.pdf[,j]<-p.matrix[r,j]*denlom(x,c(alpha.matrix[r+1,j],beta.matrix[r+1,j]))
-					  }
+				}
 							    for (i in 1:n){
 									      tau.matrix[i,]<-s.pdf[i,]/sum(s.pdf[i,])
 										maxim<-tau.matrix[i,1]
@@ -2118,7 +2119,7 @@ if (family=="weibull"){
 	  z[d]<-1
 	}
 	r<-1;eps<-1;
-	while (eps>cri & r<N){
+	while ((eps>cri) && (r<N)){
 					  for (j in 1:K){
 	 					hweib<-function(par,x){sum(-z[,j]*dweibull(x,shape=par[1],scale=par[2],log=TRUE))}
 						out<-suppressWarnings(nlminb(c(alpha.matrix[r,j],beta.matrix[r,j]),hweib,x=x)$par)
@@ -2150,94 +2151,86 @@ if (family=="weibull"){
 	cdf0<-pmixture(sort(x),"weibull",K,c(weight,alpha,beta))
 }
 if (family=="skew-normal"){
+  S1<-S2<-S3<-z<-tal<- matrix(0, n, K)
+  dSN <- function(y, alpha = 0, beta2 = 1, lambda=1){
+    dens <- 2*dnorm(y, alpha, sqrt(beta2))*pnorm(lambda*((y - alpha)/sqrt(beta2)))
+    return(dens)
+  }
+  d.mixedSN <- function(x, pi1, alpha, beta2, lambda){
+    K <- length(pi1)
+    dens <- 0
+    for (j in 1:K) dens <- dens + pi1[j]*dSN(x, alpha[j], beta2[j], lambda[j])
+    return(dens)
+  }
   if(initial=="FALSE"){
     for(i in 1:K){
-    portion[i]<-sum(clust$cluster==i)/n
-    y<-sort(x[clust$cluster==i])
-    sk1<-mean((y-mean(y))^3)/(sqrt(var(y)))^3
-    sk<-ifelse(abs(sk1)<0.99,sk1,0.99*sign(sk1))
-    lambda[i]<-suppressWarnings(uniroot(function(u)sk-sqrt(2)*(4-pi)*u^3/(pi+(pi-2)*u^2)^(3/2),c(-100000000,100000000))$root)
-    beta[i]<-sqrt(var(y)/(1-2*lambda[i]^2/(pi*(1+lambda[i]^2))))
-    alpha[i]<-mean(y)-beta[i]*sqrt(2/pi)*lambda[i]/sqrt(1+lambda[i]^2)
+      weight[i]<-sum(clust$cluster==i)/n
+      y<-sort(x[clust[[1]]==i])
+      sk1<-mean((y-mean(y))^3)/(sqrt(var(y)))^3
+      sk<-ifelse(abs(sk1)<0.99,sk1,0.99*sign(sk1))
+      lambda[i]<-sign(sk)
+      beta2[i]<-clust$withinss[i]
+      alpha[i]<-mean(y)
+    }
   }
-      alpha.matrix[1,]<-alpha
-      beta.matrix[1,]<-beta
-      lambda.matrix[1,]<-lambda
-      p.matrix[1,]<-portion
-      for (i in 1:n){
-        for (j in 1:K){
-          if (clust$cluster[i]==j){z[i,j]<-1}
-        }
-      }
+  if(initial=="TRUE"){
+    weight<-starts[1:K]
+    alpha<-starts[(K+1):(2*K)]
+    beta2<-(starts[(2*K+1):(3*K)])^2
+    lambda <-starts[(3*K+1):(4*K)]
   }
-      d.sn<-function(x,a,b,l)2/b*dnorm((x-a)/b)*pnorm(l*(x-a)/b)
-      if(initial=="TRUE"){
-        p.matrix[1,]<-starts[1:K]
-        alpha.matrix[1,]<-starts[(K+1):(2*K)]
-        beta.matrix[1,]<-starts[(2*K+1):(3*K)]
-        lambda.matrix[1,]<-starts[(3*K+1):(4*K)]
-        for (i in 1:K) z[,i]<-p.matrix[1,i]*d.sn(x,alpha.matrix[1,i],beta.matrix[1,i],lambda.matrix[1,i])
-        d<-cbind(c(1:n),apply(z, 1, which.max))
-        z<-matrix(0,nrow=n,ncol=K)
-        z[d]<-1
-      }
-      r<-1;eps<-1;
-      d.mixsn<-function(x,weight,alpha,beta,lambda){
-        K<-length(weight)
-        n<-length(x)
-        s<-matrix(0,n,K)
-        for (h in 1:K)s[,h]<-weight[h]*d.sn(x,alpha[h],beta[h],lambda[h])
-        return(apply(s,1,sum))
-      }
-      r<-1;eps<-1;
-  while (eps>cri & r<N){
-            for (j in 1:K){
-              d.single<-d.sn(x,alpha.matrix[r,j],beta.matrix[r,j],lambda.matrix[r,j])
-                if(length(which(d.single==0))>0) d.single[which(d.single==0)]<-.Machine$double.xmin
-              d.mix<-d.mixsn(x,p.matrix[r,],alpha.matrix[r,],beta.matrix[r,],lambda.matrix[r,])
-                if(length(which(d.mix==0))>0) d.mix[which(d.mix==0)]<-.Machine$double.xmin
-              s.pdf[,j]<-p.matrix[r,j]*d.single/d.mix
-              eu[,j]<-s.pdf[,j]*(1/(pi*beta.matrix[r,j]*sqrt(1+lambda.matrix[r,j]^2))*
-                      exp(-1/2*(1+lambda.matrix[r,j]^2)*(x-alpha.matrix[r,j])^2/beta.matrix[r,j]^2)+
-                      1/(pi*beta.matrix[r,j]^2*sqrt(1+lambda.matrix[r,j]^2))*exp(-1/2*(x-alpha.matrix[r,j])^2/
-                      beta.matrix[r,j]^2)*lambda.matrix[r,j]*(x-alpha.matrix[r,j])*sqrt(2*pi)*pnorm(lambda.matrix[r,j]*
-                      (x-alpha.matrix[r,j])/beta.matrix[r,j]))/d.single
-              eu2[,j]<-s.pdf[,j]*(2/(sqrt(2*pi)*beta.matrix[r,j]^3*(1+lambda.matrix[r,j]^2))*
-                       exp(-1/2*(x-alpha.matrix[r,j])^2/beta.matrix[r,j]^2)*
-                       (lambda.matrix[r,j]^2*(x-alpha.matrix[r,j])^2+beta.matrix[r,j]^2)*
-                       pnorm(lambda.matrix[r,j]*(x-alpha.matrix[r,j])/beta.matrix[r,j])+
-                       1/(pi*beta.matrix[r,j]^2*(1+lambda.matrix[r,j]^2))*
-                       exp(-1/2*(1+lambda.matrix[r,j]^2)*(x-alpha.matrix[r,j])^2/beta.matrix[r,j]^2)*
-                       lambda.matrix[r,j]*(x-alpha.matrix[r,j]))/d.single
-              alpha.matrix[r+1,j]<-(sum(x*s.pdf[,j])-lambda.matrix[r,j]/sqrt(1+lambda.matrix[r,j]^2)*beta.matrix[r,j]*sum(eu[,j]))/sum(s.pdf[,j])
-              A<-1;B<-lambda.matrix[r,j]*sqrt(1+lambda.matrix[r,j]^2)*sum(eu[,j]*(x-alpha.matrix[r,j]))/sum(s.pdf[,j]);
-              C<--(1+lambda.matrix[r,j]^2)*sum(s.pdf[,j]*(x-alpha.matrix[r,j])^2)/sum(s.pdf[,j])
-              f.beta<-function(u)A*u^2+B*u+C
-              beta.matrix[r+1,j]<-uniroot(f.beta,c(0,1000))$root
-              f.lambda<-function(u){u/(1+u^2)*sum(s.pdf[,j])-u/beta.matrix[r,j]^2*sum(s.pdf[,j]*(x-alpha.matrix[r,j])^2)+
-              (sqrt(1+u^2)+u^2/sqrt(1+u^2))*sum(eu[,j]*(x-alpha.matrix[r,j])/beta.matrix[r,j])-u*sum(eu2[,j])}
-              lambda.matrix[r+1,j]<-uniroot(f.lambda,c(-1000,1000))$root
-              p.matrix[r+1,j]<-sum(s.pdf[,j])/n
-           }
-        eps<-sum(abs(p.matrix[r+1,]-p.matrix[r,]))
-        r<-r+1
+  for (j in 1:K){
+    delta[j] <- lambda[j] / (sqrt(1 + lambda[j]^2))
+    Delta[j] <- sqrt(beta2[j])*delta[j]
+    Gama[j]  <- beta2[j] - Delta[j]^2
   }
-        weight<-round(p.matrix[r,],digits=7)
-        weight[K]<-1-(sum(weight)-weight[K])
-        alpha<-alpha.matrix[r,]
-        beta<-beta.matrix[r,]
-        lambda<-lambda.matrix[r,]
-        pdf0<-dmixture(x,"skew-normal",K,c(weight,alpha,beta,lambda))
-        cdf0<-pmixture(sort(x),"skew-normal",K,c(weight,alpha,beta,lambda))
+  alpha.old  <- alpha
+  Delta.old  <- Delta
+  Gama.old   <- Gama
+  count      <- 0
+  eps        <- 1
+  while((eps > cri) && (count <= N)){
+    count <- count + 1
+    for (j in 1:K){
+      Mtij2 <- 1/(1+(Delta[j]^2)*(Gama[j]^(-1)))
+      Mtij  <- sqrt(Mtij2)
+      alphatij <- Mtij2*Delta[j]*(Gama[j]^(-1))*(x-alpha[j])
+      prob  <- pnorm(alphatij/Mtij)
+      if(length(which(prob==0))>0) prob[which(prob == 0)]<-.Machine$double.xmin
+      E  <- dnorm(alphatij/Mtij)/prob
+      u  <- rep(1,n)
+      d1 <- dSN(x, alpha[j], beta2[j], lambda[j])
+      if(length(which(d1 == 0)) > 0) d1[which(d1==0)]<-.Machine$double.xmin
+      d2 <- d.mixedSN(x, weight, alpha, beta2, lambda)
+      if(length(which(d2 == 0)) > 0) d2[which(d2==0)]<-.Machine$double.xmin
+      tal[,j]    <- d1*weight[j]/d2
+      S1[,j]     <- tal[,j]*u
+      S2[,j]     <- tal[,j]*(alphatij*u + Mtij*E)
+      S3[,j]     <- tal[,j]*(alphatij^2*u + Mtij2 + Mtij*alphatij*E)
+      weight[j]  <- (1/n)*sum(tal[,j])
+      alpha[j]   <- sum(S1[,j]*x-Delta.old[j]*S2[,j])/sum(S1[,j])
+      Delta[j]   <- sum(S2[,j]*(x-alpha[j]))/sum(S3[,j])
+      Gama[j]    <- sum(S1[,j]*(x-alpha[j])^2-2*(x-alpha[j])*Delta[j]*S2[,j]+Delta[j]^2*S3[,j])/sum(tal[,j])
+      beta2[j]   <- Gama[j] + Delta[j]^2
+      lambda[j]  <- ((beta2[j]^(-1/2))*Delta[j])/(sqrt(1-(Delta[j]^2)*(beta2[j]^(-1))))
+    }
+    weight[K]    <- 1-(sum(weight)-weight[K])
+    eps          <- max(sum(c(abs(Delta.old-Delta))),sum(c(abs(alpha.old-alpha))),sum(c(abs(Gama.old-Gama))))
+    alpha.old    <- alpha
+    Delta.old    <- Delta
+    Gama.old     <- Gama
+  }
+    beta<-sqrt(beta2)
+    for (i in 1:n)z[i,max.col(tal)[i]]<-1
+    pdf0<-dmixture(x,"skew-normal",K,c(weight,alpha,beta,lambda))
+    cdf0<-pmixture(sort(x),"skew-normal",K,c(weight,alpha,beta,lambda))
 }
-         for (i in 1:length(x)){clustering[i]<-which(z[i,]==1)[1]}
-      von<-u<-c()
-      anderson<-c()
-         for(i in 1:n){
-             u[i]<-ifelse(cdf0[i]==1,0.99999999,cdf0[i])
-             von[i]<-(cdf0[i]-(2*i-1)/(2*n))^2
-             anderson[i]<-suppressWarnings((2*i-1)*log(cdf0[i])+(2*n+1-2*i)*log(1-cdf0[i]))
-         }
+    for(i in 1:n)clustering[i]<-which(z[i,]==1)[1]
+    for(i in 1:n){
+      u[i]<-ifelse(cdf0[i]==1,0.99999999,cdf0[i])
+      von[i]<-(cdf0[i]-(2*i-1)/(2*n))^2
+      anderson[i]<-suppressWarnings((2*i-1)*log(cdf0[i])+(2*n+1-2*i)*log(1-cdf0[i]))
+    }
   von.stat<-suppressWarnings(sum(von)+1/(12*n))
   n.p<-K*3-1
   log.likelihood<-suppressWarnings(sum(log(pdf0)))

@@ -21,6 +21,10 @@ E. J. Green, F. A. R. Jr, A. F. M. Smith, and W. E. Strawderman, 1994. Bayesian 
 \author{Mahdi Teimouri}
 \note{The methodology used here for computing the Bayes' estimator of the location parameter is different from that used by Green et al. (1994). This means that the location parameter is allowed to be any real value.}
 \examples{
-y<-rweibull(20,shape=2,scale=2)+2
+n<-20
+alpha<-2
+beta<-2
+theta<-3
+y<-rweibull(n,shape=alpha,scale=beta)+theta
 fitbayesWeibull(y, n.burn=100, n.simul=200)
 }

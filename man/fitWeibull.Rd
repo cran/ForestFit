@@ -70,7 +70,11 @@ L. Zhang, M. Xie, and L. Tang, 2008. On Weighted Least Squares Estimation for th
 %\note{}
 %\seealso{}
 \examples{
-mydata<-rweibull(100,shape=2,scale=2)+3
+n<-100
+alpha<-2
+beta<-2
+theta<-3
+mydata<-rweibull(n,shape=alpha,scale=beta)+theta
 starts<-c(2,2,3)
 fitWeibull(mydata, "TRUE", "mps", starts)
 fitWeibull(mydata, "TRUE", "wml", starts)

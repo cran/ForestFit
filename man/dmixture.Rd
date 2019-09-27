@@ -44,9 +44,10 @@ A vector of the same length as \code{x}, giving the pdf of the mixture model of 
 \author{Mahdi Teimouri}
 \examples{
 x<-seq(0,20,0.1)
+K<-2
 weight<-c(0.6,0.4)
 alpha<-c(1,2)
 beta<-c(2,1)
 param<-c(weight,alpha,beta)
-dmixture(x, "weibull", 2, param)
+dmixture(x, "weibull", K, param)
 }
