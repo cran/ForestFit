@@ -1,10 +1,14 @@
-\name{fitgrouped}
+﻿\name{fitgrouped}
 \alias{fitgrouped}
 \title{Estimating parameters of the Weibull distribution fitted to grouped data}
 \description{Suppose a sample of \eqn{n} independent observations each follows a three-parameter Weibull distribution have been divided into \eqn{m} separate groups of the form \eqn{(r_{i-1},r_i]}, for \eqn{i=1,\dots,m}. So, the likelihood function is given by
 \deqn{
 L(\Theta)=\frac{n!}{f_{1}!f_{2}!\dots f_{m}!}\prod_{i=1}^{m}\Bigl[F\bigl(r_{i}\big|\Theta\bigr)-F\bigl(r_{i-1}\big|\Theta\bigr)\Bigr]^{f_i},}
-where the \eqn{r_0} is the lower bound of the first group, \eqn{r_m} is the upper bound of the last group, and \eqn{f_i} is the frequency of observations within \eqn{i}-th group provided that \eqn{n=\sum_{i=1}^{m}f_{i}}. The cdf of a three-parameter Birnbaum-Saunders or Weibull distribution is given by \eqn{F(x;\Theta)=1- \exp \Bigl\{-\left(\frac{x-\mu}{\beta } \right)^{\alpha } \Bigr\}} where \eqn{\Theta=(\alpha,\beta,\mu)^T}.}
+where the \eqn{r_0} is the lower bound of the first group, \eqn{r_m} is the upper bound of the last group, and \eqn{f_i} is the frequency of observations within \eqn{i}-th group provided that \eqn{n=\sum_{i=1}^{m}f_{i}}. The cdf of a three-parameter Birnbaum-Saunders and Weibull distributions are given by 
+\deqn{F(x;Theta)=\Phi\Biggl(\frac{\sqrt{\frac{x}{\beta}}-\sqrt{\frac{\beta}{x}}}{\alpha}\Biggr),}
+and
+\eqn{F(x;\Theta)=1- \exp \Bigl\{-\left(\frac{x-\mu}{\beta } \right)^{\alpha } \Bigr\}}
+where \eqn{\Theta=(\alpha,\beta,\mu)^T}.}
 \usage{fitgrouped(r, f, family, method1, starts, method2)}
 \arguments{
   \item{r}{A numeric vector of length \eqn{m+1}. The first element of \eqn{r} is lower bound of the first group and other \eqn{m} elements are upper bound of the \eqn{m} groups. We note that upper bound of the \eqn{(i-1)}-th group is the lower bound of the \eqn{i}-th group, for \eqn{i=2,\dots,m}. The lower bound of the first group and upper bound of the \eqn{m}-th group are chosen arbitrarily.

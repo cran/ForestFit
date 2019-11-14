@@ -35,7 +35,7 @@
 \enumerate{
 \item Estimated parameters and corresponding summaries including standard errors, computed \eqn{t}-statistics, and \eqn{p}-values.
 \item Residuals.
-\item Covariance matrix of the estimated model parameters (coefficients) \eqn{\hat{\beta}_1}, \eqn{\hat{\beta}_1}, and \eqn{\hat{\beta}_1}.
+\item Covariance matrix of the estimated model parameters (coefficients) \eqn{\hat{\beta}_1}, \eqn{\hat{\beta}_2}, and \eqn{\hat{\beta}_3}.
 \item Residual standard error, i.e., \eqn{\hat{\sigma}}.
 \item The hieght-diameter scatterplot superimposed by the fitted model.
 }
@@ -61,16 +61,12 @@ B. Zeide. 1993. Analysis of growth equation. \emph{Forest Science}, 39, 594-616.
 }
 \author{Mahdi Teimouri}
 \examples{
-h<-c( 1.8,  2.7,  3.3,  2.4,  2.9,  3.4,  2.5,  3.2,  4.1,  2.7,
-      2.7,  2.2,  4.1,  1.5,  2.6, 17.1,  3.0,  2.5,  3.8,  2.1,
-      3.2,  2.5,  2.8,  2.2,  2.0,  2.4,  4.2,  2.6,  2.5,  3.7,
-      2.2,  3.0,  3.2,  2.5,  3.1,  3.0,  9.7, 12.1,  2.0,  2.4,
-      3.2,  2.4,  2.9,  2.4,  3.2,  2.0,  2.5, 12.8, 18.2)
-d<-c(13.7, 16.8, 20.8, 13.5, 17.0, 16.5, 15.0, 40.9, 20.8, 18.0,
-     16.0, 12.7, 26.4, 11.4, 16.8, 66.0, 18.3, 9.70, 19.8, 16.5,
-     22.9, 15.2, 29.0, 22.4, 11.4, 22.9, 26.7, 19.3, 24.1, 22.4,
-     13.5, 11.7, 19.3, 18.0, 19.6, 26.4, 72.1, 66.0, 11.7, 16.0,
-     13.5, 15.2, 17.0, 12.4, 16.0, 11.4, 14.5, 63.0, 55.6)
-starts<-c(18,0.0005,2)
-fitgrowth(h,d,"weibull",starts=starts)
-}
+# use the heigth and diameter at breast height (dbh) of the plot 55 in DBH data set.
+# The first column of DBH dataset contains the plot number. Also, H and D denote the
+# height and dbh variables that located at columns 10 and 11 of data set DBH, respectively.
+ data(DBH)
+ D<-DBH[DBH[,1]==55,10]
+ H<-DBH[DBH[,1]==55,11]
+ starts<-c(9,0.0005,2)
+ fitgrowth(H,D,"weibull",starts=starts)
+ }
