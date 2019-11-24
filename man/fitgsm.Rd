@@ -4,9 +4,9 @@
 \description{Estimates parameters of the gamma shape mixture (GSM) model whose probability density function gets the form as follows.
 \deqn{f(x,{\Theta}) = \sum_{j=1}^{K}\omega_j \frac{\beta^j}{\Gamma(j)} x^{j-1} \exp\bigl( -\beta x\bigr),}
 where \eqn{\Theta=(\omega_1,\dots,\omega_K, \beta)^T} is the parameter vector and known constant \eqn{K} is the number of components. The vector of mixing parameters is given by \eqn{\omega=(\omega_1,\dots,\omega_K)^T} where \eqn{\omega_j}s sum to one, i.e., \eqn{\sum_{j=1}^{K}\omega_j=1}. Here \eqn{\beta} is the rate parameter that is equal for all components.}
-\usage{fitgsm(x,K)}
+\usage{fitgsm(data,K)}
 \arguments{
-\item{x}{Vector of observations.}
+\item{data}{Vector of observations.}
 \item{K}{Number of components.}
 }
 \details{Supposing that the number of components, i.e., \eqn{K} is known, the parameters are estimated through the EM algorithm developed by the maintainer.}
@@ -25,7 +25,7 @@ S. Venturini, F. Dominici, and G. Parmigiani, 2008. Gamma shape mixtures for hea
 n<-100
 omega<-c(0.05, 0.1, 0.15, 0.2, 0.25, 0.25)
 beta<-2
-x<-rgsm(n,omega,beta)
+data<-rgsm(n,omega,beta)
 K<-length(omega)
-fitgsm(x,K)
+fitgsm(data,K)
 }

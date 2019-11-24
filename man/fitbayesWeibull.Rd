@@ -1,10 +1,10 @@
 \name{fitbayesWeibull}
 \alias{fitbayesWeibull}
 \title{Estimating parameters of the Weibull distribution using the Bayesian approach}
-\description{Suppose \eqn{y=(y_1,\dots,y_n)^T} denotes a vector of \eqn{n} independent observations coming from a three-parameter Weibull distribution. Using the methodology given in Green et al. (1994), we compute the Bayes' estimators of the shape, scale, and location parameters.}
-\usage{fitbayesWeibull(y, n.burn=8000, n.simul=10000)}
+\description{Suppose \eqn{x=(x_1,\dots,x_n)^T} denotes a vector of \eqn{n} independent observations coming from a three-parameter Weibull distribution. Using the methodology given in Green et al. (1994), we compute the Bayes' estimators of the shape, scale, and location parameters.}
+\usage{fitbayesWeibull(data, n.burn=8000, n.simul=10000)}
 \arguments{
-  \item{y}{Vector of observations.}
+  \item{data}{Vector of observations.}
   \item{n.burn}{Length of the burn-in period, i.e., the point after which Gibbs sampler is supposed to attain convergence. By default \code{n.burn} is 8000.}
   \item{n.simul}{Total numbers of Gibbas sampler iterations. By default \code{n.simul} is 10,000.}
 }
@@ -12,7 +12,7 @@
 \value{A list of objects in two parts as
 \enumerate{
 \item Bayes' estimators of the parameters.
-\item A sequence of four goodness-of-fit measures consist of Anderson-Darling (\code{AD}), Cram\'{e}er-von Misses (\code{CVM}), Kolmogorov-Smirnov (\code{KS}), and  log-likelihood (\code{log-likelihood}) statistics.
+\item A sequence of four goodness-of-fit measures consist of Anderson-Darling (\code{AD}), Cram\'{e}er-von Misses (\code{CVM}), Kolmogorov-Smirnov (\code{KS}), and log-likelihood (\code{log-likelihood}) statistics.
 }
 }
 \references{
@@ -25,6 +25,6 @@ n<-20
 alpha<-2
 beta<-2
 theta<-3
-y<-rweibull(n,shape=alpha,scale=beta)+theta
-fitbayesWeibull(y, n.burn=100, n.simul=200)
+data<-rweibull(n,shape=alpha,scale=beta)+theta
+fitbayesWeibull(data, n.burn=100, n.simul=200)
 }

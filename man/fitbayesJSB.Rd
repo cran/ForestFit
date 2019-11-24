@@ -1,15 +1,15 @@
-﻿\name{fitbayesJSB}
+\name{fitbayesJSB}
 \alias{fitbayesJSB}
 \title{Estimating parameters of the Johnson's SB (JSB) distribution using the Bayesian approach}
-\description{Suppose \eqn{y=(y_1,\dots,y_n)^T} denotes a vector of \eqn{n} independent observations coming from a four-parameter JSB distribution with pdf given by
+\description{Suppose \eqn{x=(x_1,\dots,x_n)^T} denotes a vector of \eqn{n} independent observations coming from a four-parameter JSB distribution with pdf given by
 \deqn{
-f\bigl(y\big|\Theta\bigr) = \frac {\delta \lambda}{\sqrt{2\pi}(y-\xi)(\lambda+\xi-y)}\exp\Biggl\{-\frac{1}{2}\Bigg[\gamma+\delta\log \biggl(\frac{y-\xi}{\lambda+\xi-y}\biggr) \Bigg]^2\Biggr\},
+f\bigl(x\big|\Theta\bigr) = \frac {\delta \lambda}{\sqrt{2\pi}(x-\xi)(\lambda+\xi-x)}\exp\Biggl\{-\frac{1}{2}\Bigg[\gamma+\delta\log \biggl(\frac{x-\xi}{\lambda+\xi-x}\biggr) \Bigg]^2\Biggr\},
 }
-where \eqn{\xi<y<\lambda+\xi} and \eqn{\Theta=(\delta,\gamma,\lambda,\xi)^T} with \eqn{\delta, \lambda> 0}, \eqn{-\infty<\gamma<\infty}, and \eqn{-\infty<\xi<\infty}. Using the Bayesian approach, we compute the Bayes' estimators of the JSB distribution parameters.}
-\usage{fitbayesJSB(y, n.burn=8000, n.simul=10000)}
+where \eqn{\xi<x<\lambda+\xi} and \eqn{\Theta=(\delta,\gamma,\lambda,\xi)^T} with \eqn{\delta, \lambda> 0}, \eqn{-\infty<\gamma<\infty}, and \eqn{-\infty<\xi<\infty}. Using the Bayesian approach, we compute the Bayes' estimators of the JSB distribution parameters.}
+\usage{fitbayesJSB(data, n.burn=8000, n.simul=10000)}
 \arguments{
-  \item{y}{Vector of observations.}
-  \item{n.burn}{Length of the burn-in period, i.e., the point after which Gibbs sampler is supposed to attain convergence. By default \code{n.burn} is 8000.}
+  \item{data}{Vector of observations.}
+  \item{n.burn}{Length of the burn-in period, i.e., the point after which Gibbs sampler is supposed to attain convergence. By default         \code{n.burn} is 8000.}
   \item{n.simul}{Total numbers of Gibbas sampler iterations. By default \code{n.simul} is 10,000.}
 }
 \details{The Bayes' estimators are obtained by averaging on the all iterations between \code{n.burn} and \code{n.simul}.}
@@ -32,6 +32,6 @@ delta<-2
 gamma<-2
 lambda<-20
 z<-rnorm(n)
-y<-xi+lambda/(1+exp(-(z-gamma)/delta))
-fitbayesJSB(y, n.burn=50, n.simul=80)
+data<-xi+lambda/(1+exp(-(z-gamma)/delta))
+fitbayesJSB(data, n.burn=50, n.simul=80)
 }

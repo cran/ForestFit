@@ -30,24 +30,24 @@ where \eqn{\Theta=(\theta_1,\dots,\theta_K)^T}, is the whole parameter vector, \
 \item Weibull \deqn{f(x,\theta)=\frac {\alpha}{\beta} \Bigl( \frac {x}{\beta} \Bigr)^{\alpha - 1}\exp\Bigl\{ -\Bigl( \frac {x}{\beta}\Bigr)^\alpha \Bigr\},}
 }
 where \eqn{\theta=(\alpha,\beta)}. In the skew-normal case, \eqn{\phi(.)} and \eqn{\Phi(.)} are the density and distribution functions of the standard normal distribution, respectively.}
-\usage{dmixture(x, g, K, param)}
+\usage{dmixture(data, g, K, param)}
 \arguments{
-\item{x}{Vector of observations.}
+\item{data}{Vector of observations.}
 \item{g}{Name of the family including "\code{birnbaum-saunders}", "\code{burrxii}", "\code{chen}", "\code{f}", "\code{Frechet}", "\code{gamma}", "\code{gompetrz}", "\code{log-normal}", "\code{log-logistic}", "\code{lomax}", "\code{skew-normal}", and "\code{weibull}".}
 \item{K}{Number of components.}
 \item{param}{Vector of the \eqn{\omega}, \eqn{\alpha}, \eqn{\beta}, and \eqn{\lambda}.}
 }
 \details{For the skew-normal case, \eqn{\alpha}, \eqn{\beta}, and \eqn{\lambda} are the location, scale, and skewness parameters, respectively.}
 \value{
-A vector of the same length as \code{x}, giving the pdf of the mixture model of families computed at \code{x}.
+A vector of the same length as \code{data}, giving the pdf of the mixture model of families computed at \code{data}.
 }
 \author{Mahdi Teimouri}
 \examples{
-x<-seq(0,20,0.1)
+data<-seq(0,20,0.1)
 K<-2
 weight<-c(0.6,0.4)
 alpha<-c(1,2)
 beta<-c(2,1)
 param<-c(weight,alpha,beta)
-dmixture(x, "weibull", K, param)
+dmixture(data, "weibull", K, param)
 }

@@ -6,15 +6,15 @@
 and
 \deqn{F(x;\alpha,\beta,\theta)=1- \exp \biggl\{-\left(\frac{x-\theta}{\beta } \right)^{\alpha } \biggr\},}
 where \eqn{x>\theta}, \eqn{\alpha > 0}, \eqn{\beta >0} and \eqn{-\infty<\theta<\infty}. Here, the parameters \eqn{\alpha}, \eqn{\beta}, and \eqn{\theta} are known in the literature as the shape, scale, and location, respectively. If \eqn{\theta=0}, then \eqn{f(x;\alpha,\beta)} and \eqn{F(x;\alpha,\beta)} in above are the pdf and cdf of a two-parameter Weibull distribution, respectively.}
-\usage{fitWeibull(mydata, location, method, starts)}
+\usage{fitWeibull(data, location, method, starts)}
 \arguments{
-  \item{mydata}{Vector of observations}
+  \item{data}{Vector of observations}
   \item{starts}{Initial values for starting the iterative procedures such as Newton-Raphson.}
-  \item{location}{Either "TRUE" or "FALSE". If location="TRUE", then shift parameter will be considered; otherwise the shift parameter omitted.}
+  \item{location}{Either TRUE or FALSE. If location=TRUE, then shift parameter will be considered; otherwise the shift parameter omitted.}
   \item{method}{Used method for estimating the parameters. In the two-parameter case, methods are
 "\code{greg1}" (for the method of generalized regression type 1),
 "\code{greg2}"  (for the method of generalized regression type 2),
-"\code{lmoment}" (for the method of L-moment),
+"\code{lm}" (for the method of L-moment),
 "\code{ml}"  (for the method of maximum likelihood (ML)),
 "\code{mlm}" (for the method of logarithmic moment),
 "\code{moment}" (for the method of moment),
@@ -26,16 +26,16 @@ where \eqn{x>\theta}, \eqn{\alpha > 0}, \eqn{\beta >0} and \eqn{-\infty<\theta<\
 "\code{wreg}" (for the method of weighted least square).
 In three-parameter case the methods are
 "\code{mle}" (for the method of ML),
-"\code{modifiedmoment1}" (for the method of modified moment (MM) type 1),
-"\code{modifiedmoment2}" (for the method of MM type 2),
-"\code{modifiedmoment3}" (for the method of MM type 3),
-"\code{modifiedml1}" (for the method of modified ML type 1),
-"\code{modifiedml2}" (for the method of modified ML type 2),
-"\code{modifiedml3}" (for the method of modified ML type 3),
-"\code{modifiedml4}" (for the method of modified ML type 4),
+"\code{mm1}" (for the method of modified moment (MM) type 1),
+"\code{mm2}" (for the method of MM type 2),
+"\code{mm3}" (for the method of MM type 3),
+"\code{mml1}" (for the method of modified ML type 1),
+"\code{mml2}" (for the method of modified ML type 2),
+"\code{mml3}" (for the method of modified ML type 3),
+"\code{mml4}" (for the method of modified ML type 4),
 "\code{moment}" (for the method of moment),
 "\code{mps}" (for the method of maximum product spacing),
-"\code{tlmoment}" (for the method of T-L moment), and
+"\code{tlm}" (for the method of T-L moment), and
 "\code{wml}" (for the method of weighted ML).}
 }
 \details{
@@ -74,10 +74,10 @@ n<-100
 alpha<-2
 beta<-2
 theta<-3
-mydata<-rweibull(n,shape=alpha,scale=beta)+theta
+data<-rweibull(n,shape=alpha,scale=beta)+theta
 starts<-c(2,2,3)
-fitWeibull(mydata, "TRUE", "mps", starts)
-fitWeibull(mydata, "TRUE", "wml", starts)
-fitWeibull(mydata, "FALSE", "mlm", starts)
-fitWeibull(mydata, "FALSE", "ustat", starts)
+fitWeibull(data, TRUE, "mps", starts)
+fitWeibull(data, TRUE, "wml", starts)
+fitWeibull(data, FALSE, "mlm", starts)
+fitWeibull(data, FALSE, "ustat", starts)
 }

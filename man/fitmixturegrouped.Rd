@@ -12,14 +12,14 @@ where
 in which \eqn{f(x|\theta_k)} denotes the pdf of the \eqn{j}-th component. Using the the EM algorithm proposed by Dempster et al. (1977), we can solve \eqn{
 \partial L(\Theta|f_1,\dots,f_m)/{\partial \Theta}=0} by introducing two new missing variables.
 }
-\usage{fitmixturegrouped(family, r, f, K, initial="FALSE", starts)}
+\usage{fitmixturegrouped(family, r, f, K, initial=FALSE, starts)}
 \arguments{
   \item{family}{Name of the family including: "\code{gamma}", "\code{log-normal}", "\code{skew-normal}", and "\code{weibull}".}
   \item{r}{A numeric vector of length \eqn{m+1}. The first element of \eqn{r} is lower bound of the first group and other \eqn{m} elements are upper bound of the \eqn{m} groups. We note that upper bound of the \eqn{(i-1)}-th group is the lower bound of the \eqn{i}-th group, for \eqn{i=2,\dots,m}. The lower bound of the first group and upper bound of the \eqn{m}-th group are chosen arbitrarily. If raw data are available, the smallest and largest observations are chosen for lower bound of the first group and upper bound of the \eqn{m}-th group, respectively.}
   \item{f}{A numeric vector of length \eqn{m} containing the group's frequency.}
   \item{K}{Number of components.}
   \item{initial}{The sequence of initial values including \eqn{\omega_1,\dots,\omega_K,\alpha_1,\dots,\alpha_K,\beta_1,\dots,\beta_K}. For skew normal case the vector of initial values of skewness parameters will be added. By default the initial values automatically is determind by k-means method of clustering.}
-  \item{starts}{If "\code{initial=TRUE}", then sequence of the initial values must be given.}
+  \item{starts}{If \code{initial=TRUE}, then sequence of the initial values must be given.}
   }
 \details{Identifiability of the mixture models supposed to be held. For skew-normal mixture model the parameter vector of \eqn{k}-th component gets the form \eqn{\theta_k=(\alpha_k,\beta_k,\lambda_k)^{T}} where \eqn{\alpha_k,\beta_k,} and \eqn{\lambda_k} denote the location, scale, and skewness parameters, respectively.}
 \value{
@@ -38,9 +38,9 @@ weight<-c(0.3,0.7)
 alpha<-c(1,2)
 beta<-c(2,1)
 param<-c(weight,alpha,beta)
-x<-rmixture(n, "weibull", K, param)
-r<-seq(min(x),max(x),length=m+1)
-D<-data.frame(table(cut(x,r,labels=NULL,include.lowest=TRUE,right=FALSE,dig.lab=4)))
+data<-rmixture(n, "weibull", K, param)
+r<-seq(min(data),max(data),length=m+1)
+D<-data.frame(table(cut(data,r,labels=NULL,include.lowest=TRUE,right=FALSE,dig.lab=4)))
 f<-D$Freq
-fitmixturegrouped("weibull",r,f,K,initial="FALSE")
+fitmixturegrouped("weibull",r,f,K,initial=FALSE)
 }
