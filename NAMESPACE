@@ -1,6 +1,13 @@
+#useDynLib(ForestFit)
 exportPattern("^[[:alpha:]]+")
+#importFrom("base")
+#importFrom("base","system.file")
 importFrom(ars,"ars")
+#importFrom(utils,"utils")
+importFrom(utils,packageVersion)
 importFrom("stats", "splinefun", "nlm", "na.omit", "cor", "var", "median", "quantile", "nlminb", "lm", "sd", "optim", "uniroot", "runif",
            "dlnorm", "plnorm", "qlnorm", "dweibull", "dexp", "pexp", "pweibull", "rnorm", "dnorm", "pnorm", "qnorm", "dgamma", "pgamma", "rgamma","df", "pf",
            "rf", "ks.test", "rmultinom", "rweibull", "integrate", "optimize", "kmeans", "dmultinom", "nls", "as.formula")
 importFrom("graphics", "lines", "plot", "text")
+#importFrom("base", "month.abb","invisible",".onAttach")
+#importFrom("asNamespace")

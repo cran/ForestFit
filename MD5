@@ -1,6 +1,7 @@
-8abdd45f066df47025463b54537025ed *DESCRIPTION
-c788bb806ec3582af1a1176ff10ecc7e *NAMESPACE
+8250dc9d52581702be653b386bd60e79 *DESCRIPTION
+a005692a7de2c46c47d3ece7be50211d *NAMESPACE
 85a120a2ff0a964cc8a73696bca83da9 *R/ForestFit.R
+fa2f2ceeeeb705fb6554be68e4f62f5e *R/zzz.R
 4bf5f8bc1f18784685efaf0e931a73d0 *data/DBH.txt
 c4f6cefafde9c0e48d06a33fe2b07db5 *man/DBH.Rd
 15ec25d7fc748341189e03579c259da4 *man/dgsm.Rd
@@ -17,3 +18,4 @@ e0bfa6edf262c65cec7284e7d98bddb5 *man/pgsm.Rd
 bf66d87f99c40ee13c8058a00aaa3a52 *man/pmixture.Rd
 ff5301f3f3d5d47ab453d2498e91e497 *man/rgsm.Rd
 51d2895efc58227bf4b8ac73070bae7a *man/rmixture.Rd
+9797d3f911fced417918b60985895a92 *man/zzz.Rd
