@@ -1,7 +1,7 @@
-\name{fitgrowth}
-\alias{fitgrowth}
-\title{Estimatinng the parametersof the fitted non-linear growth curve to the height-diameter(H-D) observations}
-\description{Estimates the parameters of the nine well-known three-parameter non-linear curves fitted to the height-diameter observations. These nine models are given by the following.
+\name{fitcurve}
+\alias{fitcurve}
+\title{Estimatinng the parameters of the nonlinear curve  fitted to the height-diameter(H-D) observations}
+\description{Estimates the parameters of the nine well-known nine three-parameter nonlinear curves fitted to the height-diameter observations. These nine models are given by the following.
 \itemize{
 \item Richards     (Richards(1959))                   \deqn{H=1.3+\beta_1+\frac{\beta_2}{D+\beta_3},}
 \item Gompertz     (Winsor(1992))                     \deqn{H=1.3+\beta_1 e^{-\beta_2e^{-\beta_3 D}},}
@@ -13,7 +13,7 @@
 \item Sibbesen     (Huang et al. (1992))              \deqn{H=1.3+\beta_1 D^{\beta_2 D^{-\beta_3}},}
 \item Weibull      (Yang et al. (1978))               \deqn{H=1.3+\beta_1\Bigl(1-e^{-\beta_2 D^{\beta_3}}\Bigr),}
 }}
-\usage{fitgrowth(h,d,model,starts)}
+\usage{fitcurve(h,d,model,starts)}
 \arguments{
 \item{h}{Vector of height observations.}
 \item{d}{Vector of diameter observations.}
@@ -68,5 +68,5 @@ B. Zeide. 1993. Analysis of growth equation. \emph{Forest Science}, 39, 594-616.
  D<-DBH[DBH[,1]==55,10]
  H<-DBH[DBH[,1]==55,11]
  starts<-c(9,0.0005,2)
- fitgrowth(H,D,"weibull",starts=starts)
+ fitcurve(H,D,"weibull",starts=starts)
  }

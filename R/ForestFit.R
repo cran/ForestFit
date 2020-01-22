@@ -1,4 +1,4 @@
-fitgrowth<-function(h,d,model,starts){
+fitcurve<-function(h,d,model,starts){
   x<-seq(min(d),max(d),.01)
   a<-min(d)+11
   b<-max(h)-1
@@ -430,7 +430,7 @@ fitmixturegrouped<-function(family,r,f,K,initial=FALSE,starts){
             omega.matrix[h-1,k]*w*sum(f*IMX2/FT,na.rm=TRUE)/beta.matrix[h-1,k]^2+
             omega.matrix[h-1,k]*(sqrt(1+w^2)/beta.matrix[h-1,k]+w^2/(sqrt(1+w^2)*beta.matrix[h-1,k]))*sum(f*IUMX/FT,na.rm=TRUE)
         }
-        lambda.matrix[h,k]<-uniroot(flambda,c(-200,200))$root
+        lambda.matrix[h,k]<-uniroot(flambda,c(-200000,200000))$root
       }
       eps<-sum(c(abs(omega.matrix[h-1,]-omega.matrix[h,])),c(abs(alpha.matrix[h-1,]-alpha.matrix[h,])),c(abs(beta.matrix[h-1,]-beta.matrix[h,])))
       h<-h+1
@@ -2227,7 +2227,6 @@ fitmixture<-function(data,family,K,initial=FALSE,starts){
   I<-seq(1,n)
   ks.stat<-suppressWarnings(max(I/n-cdf0,cdf0-(I-1)/n))
   anderson.stat<-suppressWarnings(-n-mean(anderson))
-  von.stat<-sum(von)+1/(12*n)
   CAIC<--2*log.likelihood + 2*n.p + 2*(n.p*(n.p+1))/(n-n.p-1)
   AIC<--2*log.likelihood + 2*n.p
   BIC<--2*log.likelihood + n.p*log(n)
