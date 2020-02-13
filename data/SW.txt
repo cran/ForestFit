@@ -1,0 +1,19 @@
+   "SCIENTIFIC NAME" "DIA"
+"Pinus taeda"   13.9
+"Pinus taeda"   13.1
+"Pinus taeda"   13.0
+"Pinus taeda"   11.2
+"Pinus taeda"   13.8
+"Pinus taeda"   12.9
+"Pinus taeda"   11.8
+"Pinus taeda"   14.6
+"Pinus taeda"   10.2
+"Pinus taeda"    9.2
+"Pinus taeda"   11.2
+"Pinus taeda"   12.9
+"Pinus taeda"   10.1
+"Pinus taeda"   12.9
+"Pinus taeda"   12.1
+"Pinus taeda"   13.1
+"Pinus taeda"   15.5
+"Pinus taeda"   12.7

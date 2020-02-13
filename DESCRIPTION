@@ -9,9 +9,9 @@ License: GPL (>= 2)
 Depends: R(>= 3.3.0)
 Imports: ars
 Repository: CRAN
-Version: 0.4.7
-Date: 2020-01-20
+Version: 0.5.7
+Date: 2020-02-14
 LazyData: yes
 NeedsCompilation: no
-Packaged: 2020-01-22 13:56:29 UTC; NikPardaz
-Date/Publication: 2020-01-22 14:20:02 UTC
+Packaged: 2020-02-13 22:27:31 UTC; NikPardaz
+Date/Publication: 2020-02-13 23:00:05 UTC

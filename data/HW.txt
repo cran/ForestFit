@@ -1,0 +1,26 @@
+     "SCIENTIFIC NAME"  "DIA"
+"  Acer saccharum" 27.6
+"  Acer saccharum" 28.8
+"strya virginiana"  5.9
+"strya virginiana"  5.1
+"  Acer saccharum" 17.0
+"Tsuga canadensis" 11.9
+"Tsuga canadensis" 15.6
+"Tsuga canadensis" 19.2
+"Tsuga canadensis" 15.6
+"  Acer saccharum" 16.7
+"strya virginiana"  6.3
+"Tsuga canadensis" 23.5
+"  Acer saccharum"  2.1
+"strya virginiana"  2.8
+"strya virginiana"  4.9
+"  Acer saccharum"  6.4
+"  Acer saccharum"  5.5
+"  Acer saccharum"  5.3
+"Tsuga canadensis" 18.8
+"  Acer saccharum"  9.3
+"Tsuga canadensis" 17.0
+"  Acer saccharum"  9.9
+"  Acer saccharum" 26.0
+"Tsuga canadensis" 17.9
+"  Acer saccharum" 28.2

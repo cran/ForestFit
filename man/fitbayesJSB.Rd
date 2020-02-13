@@ -26,12 +26,12 @@ L. J. Norman, S. Kotz, and N. Balakrishnan, 1994. \emph{Continuous Univariate Di
 }
 \author{Mahdi Teimouri}
 \examples{
-n<-20
-xi<-0
-delta<-2
-gamma<-2
-lambda<-20
-z<-rnorm(n)
-data<-xi+lambda/(1+exp(-(z-gamma)/delta))
-fitbayesJSB(data, n.burn=50, n.simul=80)
+# Here we use the SW dataset provided by FIA that represents a typical loblolly pine plantation.
+# As the variable of interest, we fit the JSB ditribution to the diameter at breast height (SW$DIA)
+# in inches.
+data(SW)
+data<-SW$DIA
+fitbayesJSB(data, n.burn=100, n.simul=200)
 }
+%n<-20%xi<-0%delta<-2%gamma<-2%lambda<-20%z<-rnorm(n)%data<-xi+lambda/(1+exp(-(z-gamma)/delta))
+

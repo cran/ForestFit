@@ -28,13 +28,11 @@ M. Teimouri, S. Rezakhah, and A. Mohammdpour, 2018. EM algorithm for symmetric s
 }
 \author{Mahdi Teimouri}
 \examples{
-n<-50
-K<-2
-m<-10
-weight<-c(0.3,0.7)
-alpha<-c(1,2)
-beta<-c(2,1)
-param<-c(weight,alpha,beta)
-data<-rmixture(n, "weibull", K, param)
+# Here we model the northern hardwood uneven-age forest data (HW$DIA) in inches using a
+# 3-component Weibull mixture distribution.
+data(HW)
+data<-HW$DIA
+K<-3
 fitmixture(data,"weibull", K, initial=FALSE)
 }
+%n<-50%m<-10%weight<-c(0.3,0.7)%alpha<-c(1,2)%beta<-c(2,1)%param<-c(weight,alpha,beta)%data<-rmixture(n, "weibull", K, param)
