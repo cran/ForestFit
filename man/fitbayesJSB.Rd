@@ -31,7 +31,6 @@ L. J. Norman, S. Kotz, and N. Balakrishnan, 1994. \emph{Continuous Univariate Di
 # in inches.
 data(SW)
 data<-SW$DIA
-fitbayesJSB(data, n.burn=100, n.simul=200)
+fitbayesJSB(data, n.burn=20, n.simul=50)
 }
-%n<-20%xi<-0%delta<-2%gamma<-2%lambda<-20%z<-rnorm(n)%data<-xi+lambda/(1+exp(-(z-gamma)/delta))
 

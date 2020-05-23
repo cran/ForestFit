@@ -9,9 +9,6 @@ loblolly pine plantation.
 }
 \usage{data(SW)}
 \encoding{latin1}
-\references{
-\url{https://www.fia.fs.fed.us/library/database-documentation}
-}
 \format{
   A data frame containing 18 trees (rows) and two columns. Columns are the trees' scientific name and diameter at breast height in inches.
 }

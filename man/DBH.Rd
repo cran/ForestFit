@@ -9,11 +9,8 @@ plots were located in the Malheur National Forest on the southern end of the Blu
 \usage{data(DBH)}
 \format{A text file with 5732 observations from 17 variables related of trees characteristics such as dbh and height.}
 \encoding{latin1}
-\source{
-B. K., Kerns, D. J., Westlind, and M. A. Day. 2017. Season and interval of burning and cattle exclusion in the southern blue mountains, oregon: Overstory tree height, diameter and growth. Forest Service Research Data Archive, https://doi.org/10.2737/RDS-2017-0041.
-}
 
 \references{
-B. K., Kerns, D. J., Westlind, and M. A. Day. 2017. Season and interval of burning and cattle exclusion in the southern blue mountains, oregon: Overstory tree height, diameter and growth. Forest Service Research Data Archive, https://doi.org/10.2737/RDS-2017-0041.
+B. K., Kerns, D. J., Westlind, and M. A. Day. 2017. Season and interval of burning and cattle exclusion in the southern blue mountains, oregon: Overstory tree height, diameter and growth. Forest Service Research Data Archive, <doi:10.2737/RDS-2017-0041> .
 }
 \keyword{datasets}

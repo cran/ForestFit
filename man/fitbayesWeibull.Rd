@@ -26,5 +26,5 @@ alpha<-2
 beta<-2
 theta<-3
 data<-rweibull(n,shape=alpha,scale=beta)+theta
-fitbayesWeibull(data, n.burn=100, n.simul=200)
+fitbayesWeibull(data, n.burn=20, n.simul=50)
 }

@@ -2707,3 +2707,229 @@ rgsm<-function(n,omega,beta){
   }
   return(y)
 }
+
+skewtreg<-function(y, x, Fisher=FALSE){
+  if( any(is.na(y)) ) warning('y contains missing values')
+  if( any(is.na(x)) ) warning('x contains missing values')
+  p<-dim(cbind(y,x))[2]
+  OFI<-matrix(NA, p, p)
+  n<-length(y)
+  DST<- function(x, mu, sigma, lambda, nu=Inf){
+    PDF<-c()
+    for (i in 1:length(x)){
+      d <- ((x[i]-mu)/sigma);A<-lambda*(x[i]-mu)/sigma
+      PDF[i] <- 2*exp(lgamma((nu+1)/2)-lgamma(nu/2))/(sqrt(pi*nu)*sigma)*
+        (1+d^2/nu)^(-(nu+1)/2)*pt(sqrt((1+nu)/(d^2+nu))*A,1+nu)
+    }
+    return(PDF)
+  }
+  streg<-function(Y, X){
+    n<-length(Y);
+    N<-4000;cri<-10e-5;j<-2;eps<-1
+    s2<-s3<-M<-Mu<-K<-A<-d<-PDF<-tau<-Y1<-Y2<-rep(NA,n)
+    k<-dim(cbind(Y,X))[2]
+    x<-cbind(rep(1,n),X)
+    out<-matrix(NA,ncol=(4+k),nrow=N)
+    X1<-subset(cbind(Y,X),(Y<quantile(Y,0.8) | Y>quantile(Y,0.2)))
+    coeff<-lm(X1[,1]~X1[,2:k],data=data.frame(X1))$coefficients
+    Beta<-coeff[1:k]
+    out[1,1:k]<-Beta
+    mu<-mean(Y)
+    m3 <- 1/n*sum((Y-mu)^3)
+    sigma<-sqrt(var(Y))[1]
+    lambda<-sign(m3/sigma^3)[1]
+    nu<-2
+    out[1,(k+1):(k+4)]<-c(mu,sigma,lambda,nu)
+    Del<-lambda/sqrt(1+lambda^2)*sigma
+    Gam<-(1-lambda^2/(1+lambda^2))*sigma^2
+    while (eps>0.5 & j<N){
+      Y1<-Y-x%*%Beta
+      for(i in 1:n){
+        d[i]<-((Y1[i]-mu)/sigma)^2
+        A[i]<-lambda*(Y1[i]-mu)/sigma
+        Mu[i]<-Del/(Gam+Del^2)*(Y1[i]-mu)
+        M[i]<-sqrt(Gam/(Gam+Del^2))
+        PDF[i]<-DST(Y1[i],mu,sigma,lambda,nu)
+        K[i]<-4*nu^(nu/2)*gamma((nu+3)/2)*(d[i]+nu)^(-(nu+3)/2)*pt(sqrt((nu+3)/(d[i]+nu))*A[i],nu+3)/(PDF[i]*gamma(nu/2)*sqrt(pi)*sigma)
+        tau[i]<-2*nu^(nu/2)*gamma((nu+2)/2)*(d[i]+nu+A[i]^2)^(-(nu+2)/2)/(PDF[i]*gamma(nu/2)*(pi)*sigma)
+        s2[i]<-K[i]*Mu[i]+M[i]*tau[i]
+        s3[i]<-K[i]*Mu[i]^2+M[i]^2+Mu[i]*M[i]*tau[i]
+      }
+      mu<-sum(K*Y1-Del*s2)/sum(K)
+      Del<-sum((Y1-mu)*s2)/sum(s3)
+      Gam<-(1/n*sum(K*(Y1-mu)^2-2*(Y1-mu)*Del*s2+Del^2*s3))
+      sigma<-sqrt(Del^2+Gam)
+      lambda<-Del/sqrt(Gam)
+      obj<-function(w){sum(log(DST(Y1,mu,sigma,lambda,w)))}
+      nu<-suppressWarnings(optimize(obj, c(1,100), tol = 0.000001, maximum = TRUE)$maximum)
+      Y2<-Y*K;
+      T<-matrix(0,k,k)
+      for (i in 1:n){T<-T+((x[i,])%*%t(x[i,])*K[i])}
+      Beta<-solve(T)%*%(t(x)%*%Y2-Del*t(x)%*%s2)
+      out[j,]<-c(Beta,mu,sigma,lambda,nu)
+      if (sum(abs(out[j-1,(1:k+2)]-out[j,(1:k+2)]))<cri || j>=(N-1)){
+        eps<-0
+      }
+      else
+      {j<-j+1}
+    }
+    return(list(Beta=out[j-1,1:k],mu=out[j-1,k+1],sigma=out[j-1,k+2],lambda=out[j-1,k+3],nu=out[j-1,k+4]))
+  }
+  out<-streg(y,x)
+  if (Fisher==TRUE) {
+    FI<-function(X,beta,sigma,lambda,nu){
+      p<-dim(cbind(y,X))
+      n<-p[1]
+      T<-matrix(0, nrow=p[2], ncol=p[2])
+      nu<-ifelse(nu<=100,nu,100)
+      x<-cbind(rep(1,n),X)
+      for (i in 1:n){
+
+        f1<-function(w){d<-(w-(x[i,]%*%beta)[[1]])^2/sigma^2;
+        -(nu+1)/(nu*sigma^2*(1+d/nu))*DST((w-(x[i,]%*%beta)[[1]]), 0, sigma, lambda, nu)
+        }
+
+        f2<-function(w){d<-(w-(x[i,]%*%beta)[[1]])^2/sigma^2;
+        2*(nu+1)*d/(nu^2*sigma^2*(1+d/nu)^2)*DST((w-(x[i,]%*%beta)[[1]]), 0, sigma, lambda, nu)
+        }
+
+
+        f3<-function(w){d<-(w-(x[i,]%*%beta)[[1]])^2/sigma^2;                 A<-lambda*(w-(x[i,]%*%beta)[[1]])/sigma;
+        lambda^2*
+          (-gamma((nu+1)/2)/(nu*gamma(nu/2)*sqrt(pi*nu))*(nu+1)*(1+(A^2*(nu+1)/(d+nu))/nu)^(-nu/2-3/2)*(A*sqrt((nu+1)/(d+nu))))*
+          ((nu+1)/(d+nu))/(sigma^2*pt(sqrt((nu+1)/(d+nu))*A,df=nu+1))*DST((w-(x[i,]%*%beta)[[1]]), 0, sigma, lambda, nu)
+        }
+
+        f4<-function(w){d<-(w-(x[i,]%*%beta)[[1]])^2/sigma^2;                 A<-lambda*(w-(x[i,]%*%beta)[[1]])/sigma;
+        lambda*
+          (-gamma((nu+1)/2)/(nu*gamma(nu/2)*sqrt(pi*nu))*(nu+1)*(1+(A^2*(nu+1)/(d+nu))/nu)^(-nu/2-3/2)*(A*sqrt((nu+1)/(d+nu))))*
+          A*sqrt(nu+1)*(d+nu)^(-3/2)*(w-(x[i,]%*%beta)[[1]])*sqrt((nu+1)/(d+nu))/(sigma^3*pt(sqrt((nu+1)/(d+nu))*A,df=nu+1))*
+          DST((w-(x[i,]%*%beta)[[1]]), 0, sigma, lambda, nu)
+        }
+
+        f5<-function(w){d<-(w-(x[i,]%*%beta)[[1]])^2/sigma^2;                 A<-lambda*(w-(x[i,]%*%beta)[[1]])/sigma;
+        -lambda*dt(sqrt((nu+1)/(d+nu))*A,df=nu+1)*sqrt(nu+1)*(d+nu)^(-3/2)*(w-(x[i,]%*%beta)[[1]])/
+          (sigma^3*pt(sqrt((nu+1)/(d+nu))*A,df=nu+1))*DST((w-(x[i,]%*%beta)[[1]]), 0, sigma, lambda, nu)
+        }
+
+        f6<-function(w){d<-(w-(x[i,]%*%beta)[[1]])^2/sigma^2;                 A<-lambda*(w-(x[i,]%*%beta)[[1]])/sigma;
+        -lambda*
+          (-gamma((nu+1)/2)/(nu*gamma(nu/2)*sqrt(pi*nu))*(nu+1)*(1+(A^2*(nu+1)/(d+nu))/nu)^(-nu/2-3/2)*(A*sqrt((nu+1)/(d+nu))))*
+          sqrt((nu+1)/(d+nu))*A*sqrt(nu+1)*(d+nu)^(-3/2)*(w-(x[i,]%*%beta)[[1]])/
+          (sigma^3*pt(sqrt((nu+1)/(d+nu))*A,df=nu+1))*DST((w-(x[i,]%*%beta)[[1]]), 0, sigma, lambda, nu)
+        }
+
+        f7<-function(w){d<-(w-(x[i,]%*%beta)[[1]])^2/sigma^2;                 A<-lambda*(w-(x[i,]%*%beta)[[1]])/sigma;
+        (-gamma((nu+1)/2)/(nu*gamma(nu/2)*sqrt(pi*nu))*(nu+1)*(1+(A^2*(nu+1)/(d+nu))/nu)^(-nu/2-3/2)*(A*sqrt((nu+1)/(d+nu))))*
+          A^2*(nu+1)*(d+nu)^(-3)*(w-(x[i,]%*%beta)[[1]])^2/(sigma^4*pt(sqrt((nu+1)/(d+nu))*A,df=nu+1))*
+          DST((w-(x[i,]%*%beta)[[1]]), 0, sigma, lambda, nu)
+        }
+
+        f8<-function(w){d<-(w-(x[i,]%*%beta)[[1]])^2/sigma^2;                 A<-lambda*(w-(x[i,]%*%beta)[[1]])/sigma;
+        -sqrt(nu+1)*dt(sqrt((nu+1)/(d+nu))*A,df=nu+1)*lambda*(d+nu)^(-3/2)*(w-(x[i,]%*%beta)[[1]])/(sigma^3*pt(sqrt((nu+1)/(d+nu))*A,df=nu+1))*
+          DST((w-(x[i,]%*%beta)[[1]]), 0, sigma, lambda, nu)
+        }
+
+        f9<-function(w){d<-(w-(x[i,]%*%beta)[[1]])^2/sigma^2;                 A<-lambda*(w-(x[i,]%*%beta)[[1]])/sigma;
+        sqrt(nu+1)*dt(sqrt((nu+1)/(d+nu))*A,df=nu+1)*3*A*(d+nu)^(-5/2)*(w-(x[i,]%*%beta)[[1]])^2/(sigma^4*pt(sqrt((nu+1)/(d+nu))*A,df=nu+1))*
+          DST((w-(x[i,]%*%beta)[[1]]), 0, sigma, lambda, nu)
+        }
+
+        f10<-function(w){d<-(w-(x[i,]%*%beta)[[1]])^2/sigma^2;                 A<-lambda*(w-(x[i,]%*%beta)[[1]])/sigma;
+        -sqrt(nu+1)*dt(sqrt((nu+1)/(d+nu))*A,df=nu+1)*A*(d+nu)^(-3/2)/(sigma^2*pt(sqrt((nu+1)/(d+nu))*A,df=nu+1))*
+          DST((w-(x[i,]%*%beta)[[1]]), 0, sigma, lambda, nu)
+        }
+
+        f11<-function(w){d<-(w-(x[i,]%*%beta)[[1]])^2/sigma^2;                 A<-lambda*(w-(x[i,]%*%beta)[[1]])/sigma;
+        -lambda^2*((nu+1)/(d+nu))*(dt(sqrt((nu+1)/(d+nu))*A,df=nu+1))^2/
+          (sigma^2*(pt(sqrt((nu+1)/(d+nu))*A,df=nu+1))^2)*DST((w-(x[i,]%*%beta)[[1]]), 0, sigma, lambda, nu)
+        }
+
+        f12<-function(w){d<-(w-(x[i,]%*%beta)[[1]])^2/sigma^2;                 A<-lambda*(w-(x[i,]%*%beta)[[1]])/sigma;
+        lambda*sqrt((nu+1)/(d+nu))*(dt(sqrt((nu+1)/(d+nu))*A,df=nu+1))^2*
+          A*sqrt(nu+1)*(d+nu)^(-3/2)*(w-(x[i,]%*%beta)[[1]])/(sigma^3*(pt(sqrt((nu+1)/(d+nu))*A,df=nu+1))^2)*
+          DST((w-(x[i,]%*%beta)[[1]]), 0, sigma, lambda, nu)
+        }
+
+        f13<-function(w){d<-(w-(x[i,]%*%beta)[[1]])^2/sigma^2;                 A<-lambda*(w-(x[i,]%*%beta)[[1]])/sigma;
+        A*sqrt(nu+1)*(d+nu)^(-3/2)*(w-(x[i,]%*%beta)[[1]])*lambda*sqrt((nu+1)/(d+nu))*
+          (dt(sqrt((nu+1)/(d+nu))*A,df=nu+1))^2/(sigma^3*(pt(sqrt((nu+1)/(d+nu))*A,df=nu+1))^2)*
+          DST((w-(x[i,]%*%beta)[[1]]), 0, sigma, lambda, nu)
+        }
+
+        f14<-function(w){d<-(w-(x[i,]%*%beta)[[1]])^2/sigma^2;                 A<-lambda*(w-(x[i,]%*%beta)[[1]])/sigma;
+        -A^2*(nu+1)*(d+nu)^(-3)*(w-(x[i,]%*%beta)[[1]])^2*
+          (dt(sqrt((nu+1)/(d+nu))*A,df=nu+1))^2/(sigma^4*(pt(sqrt((nu+1)/(d+nu))*A,df=nu+1))^2)*
+          DST((w-(x[i,]%*%beta)[[1]]), 0, sigma, lambda, nu)
+        }
+
+        T1<- quadinf(f1, -Inf, Inf)$Q
+        T2<- quadinf(f2, -Inf, Inf)$Q
+        T3<- quadinf(f3, -Inf, Inf)$Q
+        T4<- quadinf(f4, -Inf, Inf)$Q
+        T5<- quadinf(f5, -Inf, Inf)$Q
+        T6<- quadinf(f6, -Inf, Inf)$Q
+        T7<- quadinf(f7, -Inf, Inf)$Q
+        T8<- quadinf(f8, -Inf, Inf)$Q
+        T9<- quadinf(f9, -Inf, Inf)$Q
+        T10<- quadinf(f10, -Inf, Inf)$Q
+        T11<- quadinf(f11, -Inf, Inf)$Q
+        T12<- quadinf(f12, -Inf, Inf)$Q
+        T13<- quadinf(f13, -Inf, Inf)$Q
+        T14<- quadinf(f14, -Inf, Inf)$Q
+        T<-T+x[i,]%*%t(x[i,])*(T1+T2+T3+T4+T5+T6+T7+T8+T9+T10+T11+T12+T13+T14)
+      }
+      return(-T)
+    }
+    OFI<-FI(x,out$Beta,out$sigma,out$lambda,out$nu)
+    Std.Error<-sqrt(diag(solve(OFI)))*out$sigma
+    t.value<-out$Beta/Std.Error
+    tail<-cbind((1-pt(t.value,n-p)),pt(t.value,n-p))
+    p.value<-2*apply(tail,1,min)
+  }
+  Error<-(y-cbind(1,x)%*%out$Beta)
+  S.E<-sum(Error^2)
+  S.T<-sum((y-mean(y))^2)
+
+  out1<-cbind(out$Beta)
+  colnames(out1)<-c("Estimate")
+  rownames(out1)<-c("beta.0",rownames(out1[2:p,], do.NULL = FALSE, prefix = "beta."))
+
+  if (Fisher==TRUE) {
+    out1<-cbind(out$Beta,Std.Error,t.value,p.value)
+    colnames(out1)<-c("Estimate", "Std. Error", "T statistic", "P value")
+    rownames(out1)<-c("beta.0",rownames(out1[2:p,], do.NULL = FALSE, prefix = "beta."))
+  }
+  out2<-cbind(min(Error),quantile(Error,0.25)[[1]],quantile(Error,0.50)[[1]],mean(Error),quantile(Error,0.75)[[1]],max(Error))
+  colnames(out2)<-c("Min", "1Q", "Median", "Mean", "3Q", "Max")
+  F.value<-(S.T-S.E)/(p-1)*(n-p)*S.E
+
+  out3<-cbind(F.value,p-1,n-p, 1-pf(F.value,p-1,n-p))
+  colnames(out3)<-cbind("Value", "DF1", "DF2", "P value")
+  rownames(out3)<-c("F-statistic")
+
+  out4<-cbind(out$sigma, p-1)
+  colnames(out4)<-cbind("Value", "DF")
+  rownames(out4)<-c("Residual Std. Error")
+
+  out5<-cbind(1-S.E/S.T, 1-(n-1)/(n-p)*(S.E/S.T))
+  colnames(out5)<-cbind("Non-adjusted", "Adjusted")
+  rownames(out5)<-c("Multiple R-Squared")
+
+  out6<-cbind(out$mu,out$sigma,out$lambda,out$nu)
+  colnames(out6)<-c("Location", "Scale", "Skewness", "DF")
+
+  if (Fisher==TRUE) {
+    colnames(OFI)<-NULL
+    out7<-OFI
+    colnames(out7)<-c("beta.0",colnames(out7[,2:p], do.NULL = FALSE, prefix = "beta."))
+    rownames(out7)<-c("beta.0",rownames(out7[2:p,], do.NULL = FALSE, prefix = "beta."))
+  }
+  list("Coefficients:"=out1,
+       "Residuals:"=out2,
+       "F:"=out3,
+       "MSE:"=out4,
+       "R2:"=out5,
+       "Estimated Parameters for Error Distribution:"=out6,
+       "Observed Fisher Information Matrix:"=ifelse(Fisher==TRUE,out7,"Not requested"))
+}

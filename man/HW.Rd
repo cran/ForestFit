@@ -7,9 +7,6 @@ Tree list from a U.S. Forest Service Forest Inventory and Analysis (FIA) plot PL
 }
 \usage{data(HW)}
 \encoding{latin1}
-\references{
-\url{https://www.fia.fs.fed.us/library/database-documentation}
-}
 \format{
   A data frame containing 25 trees (rows) and two columns. Columns are the trees' scientific name and diameter at breast height in inches.
 }
