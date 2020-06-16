@@ -489,7 +489,7 @@ fitmixturegrouped<-function(family,r,f,K,initial=FALSE,starts){
 fitWeibull<-function(data, location, method, starts){
   if(location==FALSE){
     if(method!="mlm" & method!="ml" &
-       method!="wmle" & method!="rank" &
+       method!="wml" & method!="rank" &
        method!="greg2" & method!="lm" &
        method!="greg1" &  method!="wreg" &
        method!="moment" & method!="ustat" &
