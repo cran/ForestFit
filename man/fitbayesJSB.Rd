@@ -1,11 +1,11 @@
 \name{fitbayesJSB}
 \alias{fitbayesJSB}
 \title{Estimating parameters of the Johnson's SB (JSB) distribution using the Bayesian approach}
-\description{Suppose \eqn{x=(x_1,\dots,x_n)^T} denotes a vector of \eqn{n} independent observations coming from a four-parameter JSB distribution with pdf given by
+\description{Suppose \eqn{x=(x_1,\dots,x_n)^T} denotes a vector of \eqn{n} independent observations coming from a four-parameter JSB distribution with probability density function given given by
 \deqn{
 f\bigl(x\big|\Theta\bigr) = \frac {\delta \lambda}{\sqrt{2\pi}(x-\xi)(\lambda+\xi-x)}\exp\Biggl\{-\frac{1}{2}\Bigg[\gamma+\delta\log \biggl(\frac{x-\xi}{\lambda+\xi-x}\biggr) \Bigg]^2\Biggr\},
 }
-where \eqn{\xi<x<\lambda+\xi} and \eqn{\Theta=(\delta,\gamma,\lambda,\xi)^T} with \eqn{\delta, \lambda> 0}, \eqn{-\infty<\gamma<\infty}, and \eqn{-\infty<\xi<\infty}. Using the Bayesian approach, we compute the Bayes' estimators of the JSB distribution parameters.}
+where \eqn{\xi<x<\lambda+\xi}, \eqn{\Theta=(\delta,\gamma,\lambda,\xi)^T} with \eqn{\delta, \lambda> 0}, \eqn{-\infty<\gamma<\infty}, and \eqn{-\infty<\xi<\infty}. Using the Bayesian approach, we compute the Bayes' estimators of the JSB distribution parameters.}
 \usage{fitbayesJSB(data, n.burn=8000, n.simul=10000)}
 \arguments{
   \item{data}{Vector of observations.}

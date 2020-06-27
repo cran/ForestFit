@@ -2676,6 +2676,69 @@ fitgsm<-function(data,K){
   list("beta"=out1,"omega"=out2,"measures"=out3)
 }
 
+
+djsb<-function(data, param, log = FALSE){
+  n<-length(data)
+  pdf<-rep(NA,n)
+  if(param[1]<0 || param[3]<0)
+  {
+    return(message ("Either delta or lambda is negative"))
+  }
+  if(any(data<param[4]) || any(data>param[3]+param[4]))
+  {
+    return (message ("Some element(s) of input data do not belong to support defined for the Johnson's SB distribution"))
+  }
+  else
+  {
+    for(i in 1:n)
+    {
+      pdf[i]<-suppressWarnings(param[1]*param[3]/(sqrt(2*pi)*(data[i]-param[4])*(param[3]+param[4]-data[i]))*
+                                 exp(-1/2*(param[2]+param[1]*log((data[i]-param[4])/(param[3]+param[4]-data[i])))^2))
+    }
+    suppressWarnings(if(log==TRUE) pdf<-log(pdf))
+    return(pdf)
+  }
+}
+
+pjsb<-function(data, param, log.p = FALSE, lower.tail = TRUE){
+  n<-length(data)
+  cdf<-rep(NA,n)
+  if(param[1]<0 || param[3]<0)
+  {
+    return(message ("Either delta or lambda is negative"))
+  }
+  if(any(data<param[4]) || any(data>param[3]+param[4]))
+  {
+    return (message ("Some element(s) of input data do not belong to support defined for the Johnson's SB distribution"))
+  }
+  else
+  {
+    f<-function(x) param[1]*param[3]/(sqrt(2*pi)*(x-param[4])*(param[3]+param[4]-x))*exp(-1/2*(param[2]+param[1]*log((x-param[4])/(param[3]+param[4]-x)))^2)
+    for(i in 1:n)
+    {
+      cdf[i]<-suppressWarnings(quadinf(f, param[4], data[i])$Q)
+    }
+    if(log.p==TRUE  & lower.tail == FALSE) cdf<-suppressWarnings(log(1-cdf))
+    if(log.p==TRUE  & lower.tail == TRUE)  cdf<-suppressWarnings(log(cdf))
+    if(log.p==FALSE & lower.tail == FALSE) cdf<-suppressWarnings(1-cdf)
+    return(cdf)
+  }
+}
+
+rjsb<-function(n, param){
+  data<-rep(NA,n)
+  if(param[1]<0 || param[3]<0)
+  {
+    return(message ("Either delta or lambda is negative"))
+  }
+  else
+  {
+    z <- (rnorm(n)-param[2])/param[1]
+    data <- (param[3]*exp(z) + param[4]*(exp(z)+1))/(exp(z)+1)
+    return(data)
+  }
+}
+
 dgsm<-function(data,omega,beta,log = FALSE){
   K<-length(omega)
   comp.pdf<-matrix(NA,nrow=length(data),ncol=K)
@@ -2883,8 +2946,8 @@ skewtreg<-function(y, x, Fisher=FALSE){
     }
     OFI<-FI(x,out$Beta,out$sigma,out$lambda,out$nu)
     Std.Error<-sqrt(diag(solve(OFI)))*out$sigma
-    t.value<-out$Beta/Std.Error
-    tail<-cbind((1-pt(t.value,n-p)),pt(t.value,n-p))
+    t.statistic<-out$Beta/Std.Error
+    tail<-cbind((1-pt(t.statistic,n-p)),pt(t.statistic,n-p))
     p.value<-2*apply(tail,1,min)
   }
   Error<-(y-cbind(1,x)%*%out$Beta)
@@ -2893,37 +2956,43 @@ skewtreg<-function(y, x, Fisher=FALSE){
 
   out1<-cbind(out$Beta)
   colnames(out1)<-c("Estimate")
-  rownames(out1)<-c("beta.0",rownames(out1[2:p,], do.NULL = FALSE, prefix = "beta."))
+  rownames(out1)<-c("beta.0",rownames(out1[2:p,1], do.NULL = FALSE, prefix = "beta."))
 
   if (Fisher==TRUE) {
-    out1<-cbind(out$Beta,Std.Error,t.value,p.value)
-    colnames(out1)<-c("Estimate", "Std. Error", "T statistic", "P value")
-    rownames(out1)<-c("beta.0",rownames(out1[2:p,], do.NULL = FALSE, prefix = "beta."))
+    out1<-cbind(out$Beta,Std.Error,t.statistic,p.value)
+    colnames(out1)<-c("Estimate", "Std. Error", "t.statistic", "p.value")
+    rownames(out1)<-c("beta.0",rownames(out1[2:p,1], do.NULL = FALSE, prefix = "beta."))
   }
   out2<-cbind(min(Error),quantile(Error,0.25)[[1]],quantile(Error,0.50)[[1]],mean(Error),quantile(Error,0.75)[[1]],max(Error))
   colnames(out2)<-c("Min", "1Q", "Median", "Mean", "3Q", "Max")
-  F.value<-(S.T-S.E)/(p-1)*(n-p)*S.E
+  F.statistic<-(S.T-S.E)/(p-1)*(n-p)*S.E
 
-  out3<-cbind(F.value,p-1,n-p, 1-pf(F.value,p-1,n-p))
-  colnames(out3)<-cbind("Value", "DF1", "DF2", "P value")
-  rownames(out3)<-c("F-statistic")
+  out3<-cbind(F.statistic,p-1,n-p, 1-pf(F.statistic,p-1,n-p))
+  colnames(out3)<-cbind("Value", "DF1", "DF2", "p.value")
+  rownames(out3)<-c("F.statistic")
 
-  out4<-cbind(out$sigma, p-1)
+  out4<-cbind(out$sigma, n-p)
   colnames(out4)<-cbind("Value", "DF")
   rownames(out4)<-c("Residual Std. Error")
 
   out5<-cbind(1-S.E/S.T, 1-(n-1)/(n-p)*(S.E/S.T))
   colnames(out5)<-cbind("Non-adjusted", "Adjusted")
-  rownames(out5)<-c("Multiple R-Squared")
+  rownames(out5)<-c("Multiple R Squared")
 
   out6<-cbind(out$mu,out$sigma,out$lambda,out$nu)
   colnames(out6)<-c("Location", "Scale", "Skewness", "DF")
 
-  if (Fisher==TRUE) {
+  if (Fisher==TRUE)
+  {
     colnames(OFI)<-NULL
     out7<-OFI
     colnames(out7)<-c("beta.0",colnames(out7[,2:p], do.NULL = FALSE, prefix = "beta."))
-    rownames(out7)<-c("beta.0",rownames(out7[2:p,], do.NULL = FALSE, prefix = "beta."))
+    rownames(out7)<-c("beta.0",rownames(out7[2:p,1], do.NULL = FALSE, prefix = "beta."))
+  }
+
+  if (Fisher==FALSE)
+  {
+    out7<-c("Not requested")
   }
   list("Coefficients:"=out1,
        "Residuals:"=out2,
@@ -2931,5 +3000,6 @@ skewtreg<-function(y, x, Fisher=FALSE){
        "MSE:"=out4,
        "R2:"=out5,
        "Estimated Parameters for Error Distribution:"=out6,
-       "Observed Fisher Information Matrix:"=ifelse(Fisher==TRUE,out7,"Not requested"))
+       "Observed Fisher Information Matrix:"=out7)
 }
+##
