@@ -6,7 +6,7 @@
 where \eqn{\Theta=(\omega_1,\dots,\omega_K, \beta)^T} is the parameter vector and known constant \eqn{K} is the number of components. The vector of mixing parameters is given by \eqn{\omega=(\omega_1,\dots,\omega_K)^T} where \eqn{\omega_j}s sum to one, i.e., \eqn{\sum_{j=1}^{K}\omega_j=1}. Here \eqn{\beta} is the rate parameter that is equal for all components.}
 \usage{rgsm(n, omega, beta)}
 \arguments{
-\item{n}{Vector of observations.}
+\item{n}{Number of requested random realizations.}
 \item{omega}{Vector of the mixing parameters.}
 \item{beta}{The rate parameter.}
 }

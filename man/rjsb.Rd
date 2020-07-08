@@ -8,7 +8,7 @@ f\bigl(x\big|\Theta\bigr) = \frac {\delta \lambda}{\sqrt{2\pi}(x-\xi)(\lambda+\x
 where \eqn{\xi<x<\lambda+\xi}, \eqn{\Theta=(\delta,\gamma,\lambda,\xi)^T} with \eqn{\delta, \lambda> 0}, \eqn{-\infty<\gamma<\infty}, and \eqn{-\infty<\xi<\infty}.}
 \usage{rjsb(n, param)}
 \arguments{
-\item{n}{Vector of observations.}
+\item{n}{Number of requested random realizations.}
 \item{param}{Vector of the  parameters \eqn{\delta}, \eqn{\gamma}, \eqn{\lambda}, and \eqn{\xi}.}
 }
 %\details{}

@@ -1,6 +1,6 @@
-d52f50928c620bd763156d3ea5ae862f *DESCRIPTION
+7d5126a87d88e405e3c1737e72a250a3 *DESCRIPTION
 c1abb82beba0a3a0467a05485d65302f *NAMESPACE
-64c11eaf7fcdaf870da09bd1deed0494 *R/ForestFit.R
+40bb397c77bcb9b63624872f4683c528 *R/ForestFit.R
 2bedce72a31f4ffc1ac92b073b6c52e1 *R/welcome.R
 4bf5f8bc1f18784685efaf0e931a73d0 *data/DBH.txt
 75c630b44308885a8d0ce86db1890251 *data/HW.txt
@@ -22,8 +22,8 @@ c315e2f1589c16424d4b17b90e5140b2 *man/fitgsm.Rd
 e0bfa6edf262c65cec7284e7d98bddb5 *man/pgsm.Rd
 d39ce45cf6a9ee5c49d4f3dd4b979ff2 *man/pjsb.Rd
 bf66d87f99c40ee13c8058a00aaa3a52 *man/pmixture.Rd
-ff5301f3f3d5d47ab453d2498e91e497 *man/rgsm.Rd
-292a40b064b7c6c217fe420bffe16d4e *man/rjsb.Rd
+0543fb96df0062e3f85003179513611c *man/rgsm.Rd
+63e97e0166ff823de4ee4c5dd87535cd *man/rjsb.Rd
 51d2895efc58227bf4b8ac73070bae7a *man/rmixture.Rd
-a955cd5ee978709008b34c3db28f15ef *man/skewtreg.Rd
+2b3da2b81dc0cbf17e473fe14d6778fb *man/skewtreg.Rd
 7e78a1a6ec18a7657027bb75e59d1021 *man/welcome.Rd
