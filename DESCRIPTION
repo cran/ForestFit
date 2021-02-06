@@ -17,17 +17,19 @@ Description: Developed for the following tasks. 1 ) Computing the probability de
 			 fitted to the height - diameter observation, 7 ) Estimating parameters, computing
 			 probability density function, cumulative distribution function, and generating
 			 realizations from gamma shape mixture model introduced by Venturini et al. (2008)
-			 <doi:10.1214/07-AOAS156> , 8 ) The Bayesian inference, computing probability density function,
-			 cumulative distribution function, and generating realizations from four - parameter 
-			 Johnson SB distribution, and 9 ) Robust multiple linear regression analysis when error
-			 term follows skewed t distribution.
+			 <doi:10.1214/07-AOAS156> , 8 ) The Bayesian inference, computing probability
+			 density function, cumulative distribution function, and generating realizations
+			 from four-parameter Johnson SB distribution, 9 ) Robust multiple linear regression
+			 analysis when error term follows skewed t distribution, and 10 ) Estimating 
+			 parameters of a given distribution fitted to grouped data using method of maximum
+			 likelihood.
 Encoding: UTF-8
 License: GPL (>= 2)
 Depends: R(>= 3.3.0)
 Imports: ars, pracma
 Repository: CRAN
-Version: 0.6.1
-Date: 2020-07-08
+Version: 0.7.1
+Date: 2021-02-06
 NeedsCompilation: no
-Packaged: 2020-07-08 10:55:01 UTC; NikPardaz
-Date/Publication: 2020-07-08 11:10:02 UTC
+Packaged: 2021-02-06 13:44:12 UTC; NikPardaz
+Date/Publication: 2021-02-06 14:00:02 UTC

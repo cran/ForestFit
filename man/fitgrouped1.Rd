@@ -1,5 +1,5 @@
-\name{fitgrouped}
-\alias{fitgrouped}
+\name{fitgrouped1}
+\alias{fitgrouped1}
 \title{Estimating parameters of the three-parameter Birnbaum-saunders (BS), generalized exponential (GE), and Weibull distributions fitted to grouped data}
 \description{Suppose a sample of \eqn{n} independent observations each follows a three-parameter BS, GE, or Weibull distributions have been divided into \eqn{m} separate groups of the form \eqn{(r_{i-1},r_i]}, for \eqn{i=1,\dots,m}. So, the likelihood function is given by
 \deqn{
@@ -11,7 +11,7 @@ and
 \deqn{F(x;\Theta)=1- \exp \Bigl\{-\left(\frac{x-\mu}{\beta} \right)^{\alpha} \Bigr\},}
 
 where \eqn{\Theta=(\alpha,\beta,\mu)^T}.}
-\usage{fitgrouped(r, f, family, method1, starts, method2)}
+\usage{fitgrouped1(r, f, family, method1, starts, method2)}
 \arguments{
   \item{r}{A numeric vector of length \eqn{m+1}. The first element of \eqn{r} is lower bound of the first group and other \eqn{m} elements are upper bound of the \eqn{m} groups. We note that upper bound of the \eqn{(i-1)}-th group is the lower bound of the \eqn{i}-th group, for \eqn{i=2,\dots,m}. The lower bound of the first group and upper bound of the \eqn{m}-th group are chosen arbitrarily.
   }
@@ -44,8 +44,8 @@ M. Teimouri and A. K. Gupta, 2012. Estimation Methods for the Gompertz–Makeham
 r<-c(0,1,2,3,4,10)
 f<-c(2,8,12,15,4)
 starts<-c(2,2,0)
-fitgrouped(r,f,"birnbaum-saunders","em")
-fitgrouped(r,f,"weibull","ml",starts,"CG")
-fitgrouped(r,f,"ge","em")
+fitgrouped1(r,f,"birnbaum-saunders","em")
+fitgrouped1(r,f,"weibull","ml",starts,"CG")
+fitgrouped1(r,f,"ge","em")
 
 }

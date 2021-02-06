@@ -2252,7 +2252,7 @@ fitmixture<-function(data,family,K,initial=FALSE,starts){
   out3<-clustering
   list("estimate"=out1,"measures"=out2,"cluster"=out3)
 }
-fitgrouped<-function(r,f,family,method1,starts,method2){
+fitgrouped1<-function(r,f,family,method1,starts,method2){
   if (family=="ge"){
     G<-function(x,par)pexp(x-par[3],rate=par[2])^par[1]
     g<-function(x,par){a=par[1];b=par[2];d=par[3];log(a*dexp(x-d,rate=b)*pexp(x-d,rate=b)^(a-1))}
@@ -2450,6 +2450,99 @@ fitgrouped<-function(r,f,family,method1,starts,method2){
   colnames(out3)<-c("AIC","CAIC","BIC","HQIC","AD","Chi-square","CVM","KS","log.likelihood")
   return(list("estimate"=out1,"measures"=out3))
 }
+
+fitgrouped2 <- function(r, f, param, start, cdf, pdf, method = "Nelder-Mead", lb = 0, ub = Inf, level = 0.05)
+{
+  d <- length(start)
+  m <- length(r)
+  n <- sum(f)
+  K <- rep(NA, m)
+  T0 <- c(lb, r)
+  PDF <- CDF <- function(x){}
+  body(CDF) <- bquote(.(cdf))
+  body(PDF) <- bquote(.(pdf))
+  stat_A <- stat_C <- rep(NA, m-1)
+  Alpha <- U <- rep(NA, m)
+  Alpha[1] <- f[1]/n
+  if( length(param) != d ) stop("The length of parameter vector and initial values must be the same.")
+  D2 <- matrix (NA, nrow = d, ncol = d)
+  d1_PDF <- d1_PDFc <- matrix(NA, nrow = d, ncol = m)
+  d2_PDF<- d2_PDFc <- array(NA, dim = c(d, m, d) )
+  integrand0 <- integrand1 <- integrand2 <- integrand3 <- function(x){}
+  body(integrand0) <- bquote(.(pdf))
+  loglike  <- function(x, par)
+  {
+    for(i in 1:d) assign(param[i], par[i])
+    -sum( f*log( diff(eval(cdf)) )  )
+  }
+  out <- suppressWarnings( optim(start, fn = loglike, x = T0, method = method)$par )
+  mle <- out
+  for(k in 1:d) assign(param[k], mle[k])
+  if (is.nan( integrand0(lb) ) == TRUE ) stop( "Try for another choice of lower bound lb" )
+  I0 <- Vectorize( function(w) integrate(integrand0, lower = lb, upper = w)$value, "w" )
+  C0 <- I0(r)
+  d0_PDF <- diff( c( 0, C0 ) )
+  d0_PDFc <- 1-C0
+  E_X <- d0_PDF
+  first <- sapply(1:d, function(i) D(pdf, param[i]))
+  for (i in 1:d)
+  {
+    body(integrand1) <- bquote(.(first[[i]]))
+    I1 <- Vectorize( function(w) quadinf(integrand1, lb, w)$Q, "w" )
+    C1 <- I1(r)
+    d1_PDF[i,] <- diff( c( 0, C1 ) )
+    d1_PDFc[i,] <- -C1
+  }
+  for (i in 1:d)
+  {
+    for(j in i:d)
+    {
+      second <- D(first[[i]], param[j])
+      body(integrand2) <- bquote(.(second))
+      I2 <- Vectorize( function(w) quadinf(integrand2, lb, w)$Q, "w" )
+      C2 <- I2(r)
+      d2_PDF[i,,j] <- diff( c( 0, C2 ) )
+      d2_PDF[j,,i] <- d2_PDF[i,,j]
+      d2_PDFc[i,,j] <- -C2
+      d2_PDFc[j,,i] <- d2_PDFc[i,,j]
+      D2[i,j] <- -n*sum( ( E_X*( d2_PDF[i,,j]/d0_PDF - d1_PDF[i,]*d1_PDF[j,]/d0_PDF^2 ) )  )
+      D2[j,i] <- D2[i,j]
+    }
+  }
+  for (i in 2:m)
+  {
+    Prod <- 1
+    for (j in 2:i)
+    {
+      K <- n-sum(f[1:(j-1)])
+      if (f[j]==0 && K==0)
+      {
+        Prod <- Prod
+      }else{
+        Prod <- Prod*( 1 - f[j]/K )
+      }
+    }
+    Alpha[i] <- 1 - Prod*( 1-f[1]/n )
+  }
+  U <- CDF(r)
+  for (i in 1:(m-1))
+  {
+    stat_A[i] <- Alpha[i]^2*log( U[i+1]*( 1-U[i] )/( U[i]*( 1-U[i+1] ) ) ) +
+      2*Alpha[i]*log( ( 1-U[i+1] )/( 1-U[i] ) )
+    stat_C[i] <- Alpha[i]*( U[i+1]-U[i] )*( Alpha[i]-U[i+1]-U[i] )
+  }
+  Anderson <- n*sum(stat_A) - n*log( 1 - U[m] ) - n*U[m]
+  Cramer <- n*sum(stat_C) + n/3*U[m]^3
+  KS <- max( abs( Alpha - U ) )
+  out1 <- cbind( out, sqrt( diag(solve(D2)) ), out + sqrt(diag(solve(D2)))*qnorm(level/2), out + sqrt(diag(solve(D2)))*qnorm(1 - level/2) )
+  colnames(out1) <- c("estimate", "std. error", "lower bound", "upper bound")
+  rownames(out1) <- param
+  out2 <- rbind( c(Anderson, Cramer, KS) )
+  colnames(out2) <- c("AD", "CVM", "KS")
+  rownames(out2) <- c("measure")
+  return( list( "estimate" = out1,  "measures" = out2 ) )
+}
+
 
 fitbayesJSB<-function(data,n.burn=8000,n.simul=10000){
   lambda.sampler<-function(gamma,delta,xi,x,nrep=1000){
@@ -2776,7 +2869,7 @@ skewtreg<-function(y, x, Fisher=FALSE){
       for (i in 1:n){T<-T+((x[i,])%*%t(x[i,])*K[i])}
       Beta<-solve(T)%*%(t(x)%*%Y2-Del*t(x)%*%s2)
       out[j,]<-c(Beta,mu,sigma,lambda,nu)
-      if (sum(abs(out[j-1,(1:k+2)]-out[j,(1:k+2)]))<cri || j>=(N-1)){
+      if (sum(abs(out[j-1,1:(k+2)]-out[j,1:(k+2)]))<cri || j>=(N-1)){
         eps<-0
       }
       else
