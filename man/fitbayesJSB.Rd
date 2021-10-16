@@ -9,8 +9,8 @@ where \eqn{\xi<x<\lambda+\xi}, \eqn{\Theta=(\delta,\gamma,\lambda,\xi)^T} with \
 \usage{fitbayesJSB(data, n.burn=8000, n.simul=10000)}
 \arguments{
   \item{data}{Vector of observations.}
-  \item{n.burn}{Length of the burn-in period, i.e., the point after which Gibbs sampler is supposed to attain convergence. By default         \code{n.burn} is 8000.}
-  \item{n.simul}{Total numbers of Gibbas sampler iterations. By default \code{n.simul} is 10,000.}
+  \item{n.burn}{Length of the burn-in period, i.e., the point after which Gibbs sampler is supposed to attain convergence. By default \code{n.burn} is 8000.}
+  \item{n.simul}{Total numbers of Gibbs sampler iterations. By default \code{n.simul} is 10,000.}
 }
 \details{The Bayes' estimators are obtained by averaging on the all iterations between \code{n.burn} and \code{n.simul}.}
 \value{A list of objects in two parts as
@@ -27,7 +27,7 @@ L. J. Norman, S. Kotz, and N. Balakrishnan, 1994. \emph{Continuous Univariate Di
 \author{Mahdi Teimouri}
 \examples{
 # Here we use the SW dataset provided by FIA that represents a typical loblolly pine plantation.
-# As the variable of interest, we fit the JSB ditribution to the diameter at breast height (SW$DIA)
+# As the variable of interest, we fit the JSB distribution to the diameter at breast height (SW$DIA)
 # in inches.
 data(SW)
 data<-SW$DIA

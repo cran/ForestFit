@@ -1305,107 +1305,115 @@ pmixture<-function(data,g,K,param){
   return(y)
 }
 
-rmixture<-function(n,g,K,param){
+rmixture<-function(n, g, K, param)
+{
   if(g!="birnbaum-saunders" &  g!="burr"& g!="chen" &  g!="f" & g!="frechet" & g!="gamma"&
-     g!="gompertz" & g!="log-logistic" & g!="log-normal" & g!="lomax" &  g!="skew-normal"&  g!="skew-normal" & g!="weibull"){
-    stop ("Baseline distribution is not implemented or misspelled.")}
-  omega<-param[1:K];alpha<-param[(K+1):(2*K)];beta<-param[(2*K+1):(3*K)];lambda<-param[(3*K+1):(4*K)]
-  #  if (sum(omega)!= 1){stop ("The weight vector must be added to one.")}
-  size<-apply(as.matrix(rmultinom(n,1,omega)),1,sum)
-  y<-rep(NA,n)
-  s<-0
-  if(g=="birnbaum-saunders"){
-    for (j in 1:length(omega)){
-      zq<-alpha[j]*qnorm(runif(size[j]))
-      s<-s+size[j]
-      if (j==1){h<-0}else{h<-1}
-      y[(h*(s-size[j])+1):s]<-beta[j]/4*(zq+sqrt(zq^2+4))^2
+     g!="gompertz" & g!="log-logistic" & g!="log-normal" & g!="lomax" &  g!="skew-normal"&
+     g!="skew-normal" & g!="weibull")
+  {
+    stop ("Baseline distribution is not implemented or misspelled.")
+  }
+  omega <- param[1:K]
+  alpha <- param[(K+1):(2*K)]
+  beta  <- param[(2*K+1):(3*K)]
+  lambda<- param[(3*K+1):(4*K)]
+  label <- rep(NA, K)
+  y <- rep(NA, n)
+  label <- apply( rmultinom(n, 1, omega), 2, which.max )
+  if(g=="birnbaum-saunders")
+  {
+    for (i in 1:n)
+    {
+      zq <- alpha[label[i]]*qnorm(runif(1))
+      y[i] <- beta[label[i]]/4*(zq+sqrt(zq^2+4))^2
     }
   }
-  if(g=="burr"){
-    for (j in 1:length(omega)){
-      s<-s+size[j]
-      if (j==1){h<-0}else{h<-1}
-      y[(h*(s-size[j])+1):s]<-((1-runif(size[j]))^(-1/beta[j])-1)^(1/alpha[j])
+  if(g=="burr")
+  {
+    for (i in 1:n)
+    {
+      y[i] <-	((1-runif(1))^(-1/beta[label[i]])-1)^(1/alpha[label[i]])
     }
   }
-  if(g=="chen"){
-    for (j in 1:length(omega)){
-      s<-s+size[j]
-      if (j==1){h<-0}else{h<-1}
-      y[(h*(s-size[j])+1):s]<-(log(1-log(1-runif(size[j]))/beta[j]))^(1/alpha[j])
+  if(g=="chen")
+  {
+    for (i in 1:n)
+    {
+      y[i] <- (log(1-log(1-runif(1))/beta[label[i]]))^(1/alpha[label[i]])
     }
   }
-  if(g=="f"){
-    for (j in 1:length(omega)){
-      s<-s+size[j]
-      if (j==1){h<-0}else{h<-1}
-      y[(h*(s-size[j])+1):s]<-rf(size[j],df1=alpha[j],df2=beta[j])
+  if(g=="f")
+  {
+    for (i in 1:n)
+    {
+      y[i] <-	rf(1,df1=alpha[label[i]],df2=beta[label[i]])
     }
   }
-  if(g=="frechet"){
-    qf=function(par,u){a=par[1]; b=par[2]; b*(-log(u))^(-1/a)}
-    for (j in 1:length(omega)){
-      s<-s+size[j]
-      if (j==1){h<-0}else{h<-1}
-      y[(h*(s-size[j])+1):s]<-qf(c(alpha[j],beta[j]),runif(size[j]))
+  if(g=="frechet")
+  {
+    qf <- function(par,u){a=par[1]; b=par[2]; b*(-log(u))^(-1/a)}
+    for (i in 1:n)
+    {
+      y[i] <-	qf(c(alpha[label[i]],beta[label[i]]),runif(1))
     }
   }
-  if(g=="gamma"){
-    for (j in 1:length(omega)){
-      s<-s+size[j]
-      if (j==1){h<-0}else{h<-1}
-      y[(h*(s-size[j])+1):s]<-rgamma(size[j],alpha[j],scale=beta[j])
+  if(g=="gamma")
+  {
+    for (i in 1:n)
+    {
+      y[i] <-	rgamma(1,alpha[label[i]],scale=beta[label[i]])
     }
   }
-  if(g=="gompertz"){
-    for (j in 1:length(omega)){
-      s<-s+size[j]
-      if (j==1){h<-0}else{h<-1}
-      y[(h*(s-size[j])+1):s]<-log(1-alpha[j]/beta[j]*log(1-runif(size[j])))/alpha[j]
+  if(g=="gompertz")
+  {
+    for (i in 1:n)
+    {
+      y[i] <-
+        log(1-alpha[label[i]]/beta[label[i]]*log(1-runif(1)))/alpha[label[i]]
     }
   }
-  if(g=="log-logistic"){
-    qf=function(par,u){a=par[1]; b=par[2]; b*(1/u-1)^(-1/a)}
-    for (j in 1:length(omega)){
-      s<-s+size[j]
-      if (j==1){h<-0}else{h<-1}
-      y[(h*(s-size[j])+1):s]<-qf(c(alpha[j],beta[j]),runif(size[j]))
+  if(g=="log-logistic")
+  {
+    for (i in 1:n)
+    {
+      y[i] <-	qf(runif(1), alpha[label[i]], beta[label[i]])
     }
   }
-  if(g=="log-normal"){
-    for (j in 1:length(omega)){
-      s<-s+size[j]
-      if (j==1){h<-0}else{h<-1}
-      y[(h*(s-size[j])+1):s]<-qlnorm(runif(size[j]),meanlog=alpha[j],sdlog=beta[j])
+  if(g=="log-normal")
+  {
+    for (i in 1:n)
+    {
+      y[i] <-	qlnorm(runif(1),meanlog=alpha[label[i]],sdlog=beta[label[i]])
     }
   }
-  if(g=="lomax"){
-    for (j in 1:length(omega)){
-      s<-s+size[j]
-      if (j==1){h<-0}else{h<-1}
-      y[(h*(s-size[j])+1):s]<-((1-runif(size[j]))^(-1/beta[j])-1)/alpha[j]
+  if(g=="lomax")
+  {
+    for (i in 1:n)
+    {
+      y[i] <-	((1-runif(1))^(-1/beta[label[i]])-1)/alpha[label[i]]
     }
   }
-  if(g=="skew-normal"){
-    rskewn<-function(nu,a,b,lamb){
-      SN<-c()
-      for (i in 1:nu){
+  if(g=="skew-normal")
+  {
+    rskewn<-function(nu,a,b,lamb)
+    {
+      SN <- c()
+      for (i in 1:nu)
+      {
         SN[i]<-a+b*(lamb*abs(rnorm(1))+rnorm(1))/sqrt(1+lamb^2)
       }
       return(SN)
     }
-    for (j in 1:length(omega)){
-      s<-s+size[j]
-      if (j==1){h<-0}else{h<-1}
-      y[(h*(s-size[j])+1):s]<-rskewn(size[j],alpha[j],beta[j],lambda[j])
+    for (i in 1:n)
+    {
+      y[i] <-	rskewn(1,alpha[label[i]],beta[label[i]],lambda[label[i]])
     }
   }
-  if(g=="weibull"){
-    for (j in 1:length(omega)){
-      s<-s+size[j]
-      if (j==1){h<-0}else{h<-1}
-      y[(h*(s-size[j])+1):s]<-rweibull(size[j],alpha[j],scale=beta[j])
+  if(g=="weibull")
+  {
+    for (i in 1:n)
+    {
+      y[i] <-	rweibull(1,alpha[label[i]],scale=beta[label[i]])
     }
   }
   return(y)
@@ -2746,18 +2754,27 @@ fitgsm<-function(data,K){
   beta0<-sum(data)*.35/.65
   beta.hat[1]<-rgamma(1,shape=K/max(data)*beta0,rate=beta0)
   omega.hat[1,]<-rep(1/K,K)
-  while(eps>cri && (r<N)){
+  while(eps>cri && (r<N))
+  {
     for(k in 1:K) comp.pdf[,k]<-dgamma(data,shape=k,rate=beta.hat[r-1])
     pdf<-omega.hat[r-1,]%*%t(comp.pdf)
     for (i in 1:length(data)) Z[i,]<-omega.hat[r-1,]*comp.pdf[i,]/pdf[i]
     omega.hat[r,]<-apply(Z,2,sum)/n
     beta.hat[r]<-sum(Z%*%seq(1,K))/sum(data%*%Z)
     dif<-sum(abs(omega.hat[r,]-omega.hat[r-1,]))/K
-    if (dif<=cri){eps<-0}else{r<-r+1}
+    if (dif <= cri)
+    {
+    eps<-0
+    }
+    else
+    {
+    r<-r+1
+    }
   }
   cdf0<-pgsm(sort(data),omega.hat[r,],beta.hat[r])
   pdf0<-dgsm(data,omega.hat[r,],beta.hat[r])
-  for(i in 1:n){
+  for(i in 1:n)
+  {
     u[i]<-ifelse(cdf0[i]==1,0.99999999,cdf0[i])
     von[i]<-(cdf0[i]-(2*i-1)/(2*n))^2
     anderson[i]<-suppressWarnings((2*i-1)*log(cdf0[i])+(2*n+1-2*i)*log(1-cdf0[i]))
@@ -2781,7 +2798,7 @@ fitgsm<-function(data,K){
 dgsm<-function(data,omega,beta,log = FALSE){
   K<-length(omega)
   comp.pdf<-matrix(NA,nrow=length(data),ncol=K)
-  for(k in 1:K) comp.pdf[,k]<-dgamma(data,shape=k,rate=beta)
+  for(k in 1:K) comp.pdf[,k]<-dgamma(data, shape = k, rate = beta)
   pdf<-comp.pdf%*%omega
   if(log==TRUE){pdf<-log(pdf)}
   return(as.vector(pdf))
@@ -2790,7 +2807,7 @@ dgsm<-function(data,omega,beta,log = FALSE){
 pgsm<-function(data,omega,beta,log.p = FALSE,lower.tail = TRUE){
   K<-length(omega)
   comp.cdf<-matrix(NA,nrow=length(data),ncol=K)
-  for(k in 1:K) comp.cdf[,k]<-pgamma(data,shape=k,rate=beta)
+  for(k in 1:K) comp.cdf[,k]<-pgamma(data, shape = k, rate = beta)
   cdf<-comp.cdf%*%omega
   if(log.p==TRUE & lower.tail == FALSE) cdf<-log(1-cdf)
   if(log.p==TRUE & lower.tail == TRUE) cdf<-log(cdf)
@@ -2799,14 +2816,10 @@ pgsm<-function(data,omega,beta,log.p = FALSE,lower.tail = TRUE){
 }
 
 rgsm<-function(n,omega,beta){
-  size<-apply(as.matrix(rmultinom(n,1,omega)),1,sum)
-  y<-rep(NA,n)
-  s<-0
-  for (j in 1:length(omega)){
-    s<-s+size[j]
-    if (j==1){h<-0}else{h<-1}
-    y[(h*(s-size[j])+1):s]<-rgamma(size[j],j,rate=beta[1])
-  }
+  label <- rep(NA, n)
+      y <- rep(NA, n)
+  label <- apply( rmultinom(n, 1, omega), 2, which.max )
+  for (i in 1:n) y[i] <- rgamma(1, label[i], rate = beta)
   return(y)
 }
 
@@ -3098,4 +3111,126 @@ rjsb<-function(n, param){
     data <- (param[3]*exp(z) + param[4]*(exp(z)+1))/(exp(z)+1)
     return(data)
   }
+}
+fitJSB <- function(y, n.burn = 8000, n.simul = 10000)
+{
+  stat.JSB <- function(data, hat)
+  {
+    n  <- length(data)
+    sx <- sort(data)
+    cramer <- u <- anderson <- log.like <- ks <- c()
+    pdf0 <- function(par, x)
+    {
+      del = par[1]; gam = par[2]; lam = par[3]; xi = par[4]
+      del*lam/( sqrt(2*pi)*(x - xi)*(lam + xi - x) )*exp(-1/2*( gam + del*
+                                                                  log( (x - xi)/(lam + xi - x) ) )^2)
+    }
+    cdf0 <- function(par, z)
+    {
+      del = par[1]; gam = par[2]; lam = par[3]; xi = par[4];
+      f <- function(x) del*lam/( sqrt(2*pi)*(x - xi)*(lam + xi - x) )*
+        exp(-1/2*(gam + del*log( (x - xi)/(lam + xi - x) ) )^2)
+      up <- min(lam + xi , z)
+      #quadinf(f, xi, up)$Q
+      integrate(f, lower = xi, upper = up)$value
+    }
+    for(i in 1:n)
+    {
+      u[i] <- ifelse( cdf0(hat, sx[i]) >= 1, 0.9999999, cdf0(hat, sx[i]) )
+      cramer[i]   <- ( u[i] - (2*i - 1)/(2*n) )^2
+      anderson[i] <- (2*i - 1)*log( u[i] ) + (2*n + 1 - 2*i)*log( 1 - u[i] )
+      log.like[i] <- log( round(pdf0(hat, sx[i]), digits = 20) )
+      ks[i]       <- max( i/n - u[i], u[i] - (i - 1)/n )
+    }
+    anderson.stat <- suppressWarnings( -n - mean(anderson) )
+    cramer.stat   <- suppressWarnings( sum(cramer) + 1/(12*n) )
+    loglike.stat  <- suppressWarnings( sum(log.like) )
+    ks.stat  <- suppressWarnings( max(ks) )
+    out <- c(anderson.stat, cramer.stat, ks.stat, loglike.stat)
+    return(out)
+  }
+  fitbayesJSB.restricted <- function(data, n.burn = n.burn, n.simul = n.simul)
+  {
+    xi <- min(data) - 1.34
+    lambda <- max(data) - xi + 3.8
+    if( n.burn>n.simul ) stop ("n.burn must be less than n.simul")
+    r.y <- range(data)
+    if(r.y[1] == xi) stop ("minimum of data must be greater than parameter xi")
+    if(lambda < - r.y[2] + r.y[1] - 3) stop ("parameter lambda must be admissible")
+    gamma.hat <- delta.hat <- c()
+    n <- length(data)
+    delta.hat[1] <- 1
+    gamma.hat[1] <- log( 1/median((data - xi)/lambda) - 1 )
+    for (r in 2:n.simul)
+    {
+      dd <- log( (data - xi)/(lambda + xi - data) )
+      mu.gamma <- -delta.hat[r-1]*sum(dd)/n
+      sigma.gamma <- sqrt(1/n)
+      gamma.hat[r] <- rnorm(1, mu.gamma, sigma.gamma)
+      f <- function(x, gamma, lambda, xi, y)
+      {
+        t1 <- gamma*sum( log( (y - xi)/(lambda + xi - y) ) )
+        t2 <- sum( (log( (y - xi)/(lambda + xi - y) ) )^2)
+        length(y)*log(x) - t2/2*(x + t1/t2)^2
+      }
+      fprima <- function(x, gamma, lambda, xi, y)
+      {
+        t1 <- gamma*sum( log((y - xi)/(lambda + xi - y)) )
+        t2 <- sum( (log( (y - xi)/(lambda + xi - y) ) )^2 )
+        length(y)/x - t2*(x + t1/t2)
+      }
+      delta.hat[r] <- ars(1, f, fprima, x = c(.001, 5, 300), m = 3,
+                          lb = TRUE, xlb = 0, gamma = gamma.hat[r],
+                          lambda = lambda, xi = xi, y = data)
+    }
+    deltahat  <- mean( delta.hat[n.burn:n.simul] )
+    gammahat  <- mean( gamma.hat[n.burn:n.simul] )
+    lambdahat <- lambda
+    xihat     <- xi
+    list("estimate" = c(deltahat, gammahat, lambdahat, xihat))
+  }
+
+  xi.mom <- min(y) - 1.34
+  lambda.mom <- max(y) - xi.mom + 3.8
+  mu <- (mean(y) - xi.mom)/lambda.mom
+  s.d <- sd(y)/lambda.mom
+  delta.mom <- mu*(1 - mu)/s.d + s.d/4*( 1/(mu*(1 - mu)) - 8 )
+  gamma.mom <- delta.mom*log( (1 - mu)/mu ) + (0.5 - mu)/delta.mom
+  estim.mom <- c(delta.mom, gamma.mom, lambda.mom, xi.mom)
+
+  xi.cml <- min(y) - 1.34
+  lambda.cml <- max(y)
+  fi <- log( (y - xi.cml)/(lambda.cml + xi.cml - y) )
+  delta.cml <- 1/sd(fi)
+  gamma.cml <- -mean(fi)*delta.cml
+  estim.cml <- c(delta.cml, gamma.cml, lambda.cml, xi.cml)
+
+  xi.kb <- min(y) - 1.3
+  lambda.kb <- max(y) - xi.kb + 3.8
+  f.95 <- log(  ( quantile(y, 0.95)[[1]] - xi.kb )/
+                  ( lambda.kb + xi.kb - quantile(y, 0.95)[[1]] )  )
+  f.50 <- log(  ( quantile(y, 0.50)[[1]] - xi.kb )/
+                  ( lambda.kb + xi.kb - quantile(y, 0.50)[[1]] )  )
+  delta.kb <- qnorm(.95)/(f.95 - f.50)
+  gamma.kb <- -delta.kb*f.50
+  estim.kb <- c(delta.kb, gamma.kb, lambda.kb, xi.kb)
+
+  out <- fitbayesJSB.restricted(y, n.burn = 8000, n.simul = 10000)$estimate
+  estim.bayes  <- out
+
+  stat.mom <- stat.JSB(y, estim.mom)
+  stat.cml <- stat.JSB(y, estim.cml)
+  stat.kb  <- stat.JSB(y, estim.kb)
+  stat.bayes <- stat.JSB(y, estim.bayes )
+  out.stat   <- matrix(c(stat.mom, stat.cml, stat.kb, stat.bayes),
+                       nrow = 4, ncol = 4, byrow = TRUE)
+  out.estim  <- matrix(c(estim.mom, estim.cml, estim.kb, estim.bayes),
+                       nrow = 4, ncol = 4, byrow = TRUE)
+  colnames(out.estim) <- c("delta", "gamma", "lambda", "xi")
+  rownames(out.stat)  <- c("MM", "CML", "KB", "Bayesian")
+  rownames(out.estim) <- c("MM", "CML", "KB", "Bayesian")
+  colnames(out.stat)  <- c("AD", "CVM", "KS", "log.likelihood")
+  out <- list( out.estim, out.stat )
+  names(out) <- c( paste0("estimate"), paste0("statistic") )
+  return( out )
 }

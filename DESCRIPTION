@@ -20,16 +20,18 @@ Description: Developed for the following tasks. 1 ) Computing the probability de
 			 <doi:10.1214/07-AOAS156> , 8 ) The Bayesian inference, computing probability
 			 density function, cumulative distribution function, and generating realizations
 			 from four-parameter Johnson SB distribution, 9 ) Robust multiple linear regression
-			 analysis when error term follows skewed t distribution, and 10 ) Estimating 
+			 analysis when error term follows skewed t distribution, 10 ) Estimating 
 			 parameters of a given distribution fitted to grouped data using method of maximum
-			 likelihood.
+			 likelihood, and 11 ) Estimating parameters of the Johnson SB distribution through 
+			 the Bayesian, method of moment, conditional maximum likelihood, and two - percentile 
+			 method.
 Encoding: UTF-8
 License: GPL (>= 2)
 Depends: R(>= 3.3.0)
 Imports: ars, pracma
 Repository: CRAN
-Version: 0.7.1
-Date: 2021-02-06
+Version: 1.2.3
+Date: 2021-10-16
 NeedsCompilation: no
-Packaged: 2021-02-06 13:44:12 UTC; NikPardaz
-Date/Publication: 2021-02-06 14:00:02 UTC
+Packaged: 2021-10-16 13:35:54 UTC; NikPardaz
+Date/Publication: 2021-10-16 14:10:10 UTC
