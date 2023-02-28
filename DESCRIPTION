@@ -1,7 +1,7 @@
 Package: ForestFit
 Type: Package
 Title: Statistical Modelling for Plant Size Distributions
-Author: Mahdi Teimouri
+Author: Mahdi Teimouri [aut, cre, cph, ctb] (<https://orcid.org/0000-0002-5371-9364>)
 Maintainer: Mahdi Teimouri <teimouri@aut.ac.ir>
 Description: Developed for the following tasks. 1 ) Computing the probability density function,
              cumulative distribution function, random generation, and estimating the parameters
@@ -30,8 +30,8 @@ License: GPL (>= 2)
 Depends: R(>= 3.3.0)
 Imports: ars, pracma
 Repository: CRAN
-Version: 1.2.3
-Date: 2021-10-16
+Version: 2.2.3
+Date: 2023-02-27
 NeedsCompilation: no
-Packaged: 2021-10-16 13:35:54 UTC; NikPardaz
-Date/Publication: 2021-10-16 14:10:10 UTC
+Packaged: 2023-02-27 17:54:48 UTC; NikPardaz
+Date/Publication: 2023-02-28 05:02:29 UTC

@@ -1,6 +1,6 @@
-4d6e55ec8584195887738d4b6e4375d7 *DESCRIPTION
+f9ad2a1fa5f1c47653314a3ee61163c5 *DESCRIPTION
 f158876aabae70bd041e6e3cf0836943 *NAMESPACE
-8ac3801f8dd733da0394b3c363682145 *R/ForestFit.R
+805c6590a0f36576430825ffd42ed10f *R/ForestFit.R
 2bedce72a31f4ffc1ac92b073b6c52e1 *R/welcome.R
 ea4a7e0282c615c9101bb4816efe442a *data/DBH.txt.gz
 a24ac3268533964acfbe8037c912d7a1 *data/HW.txt.gz
@@ -13,9 +13,9 @@ cd0a76be34667f811696ea589e8a72d2 *man/SW.Rd
 2e627edad9cd9efd21a6ed6d63f3040f *man/dmixture.Rd
 c2bbb9f4164da3491ac12ff46e324fd4 *man/fitJSB.Rd
 b23fc7ef1a16fb347740acdf19b27754 *man/fitWeibull.Rd
-32e1eab02194186bbae72f7be4eaf8c8 *man/fitbayesJSB.Rd
-ef8272565848130cdd0bc321780a439e *man/fitbayesWeibull.Rd
-9c05e87bbdd53cce5e9ff55dff7322b1 *man/fitcurve.Rd
+902a505178f063b85981e9d4e968afea *man/fitbayesJSB.Rd
+c32a8aac288f07f3a493cc9c31ab7f89 *man/fitbayesWeibull.Rd
+0bd2418bc715f40236e86a20b3e7f2a2 *man/fitcurve.Rd
 0f06203a4ecb5df4b6e4d97d2662e6d7 *man/fitgrouped1.Rd
 e2365c83b71bc5cc517afc2be138956b *man/fitgrouped2.Rd
 c315e2f1589c16424d4b17b90e5140b2 *man/fitgsm.Rd
@@ -27,5 +27,5 @@ bf66d87f99c40ee13c8058a00aaa3a52 *man/pmixture.Rd
 0543fb96df0062e3f85003179513611c *man/rgsm.Rd
 63e97e0166ff823de4ee4c5dd87535cd *man/rjsb.Rd
 51d2895efc58227bf4b8ac73070bae7a *man/rmixture.Rd
-2b3da2b81dc0cbf17e473fe14d6778fb *man/skewtreg.Rd
+18dfa5f6bc88bcf0f4b84b7198c5d2f2 *man/skewtreg.Rd
 7e78a1a6ec18a7657027bb75e59d1021 *man/welcome.Rd

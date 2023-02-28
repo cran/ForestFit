@@ -16,8 +16,10 @@ A list of estimated regression coefficients, asymptotic standard error, correspo
 }
 \author{Mahdi Teimouri}
 \examples{
-n<-20
+\donttest{
+n<-100
 x<-rnorm(n)
 y<-2+2*x+rt(n,df=2)
 skewtreg(y,x,Fisher=FALSE)
+}
 }

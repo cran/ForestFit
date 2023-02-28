@@ -1,9 +1,15 @@
-fitcurve<-function(h,d,model,starts){
-  x<-seq(min(d),max(d),.01)
-  a<-min(d)+11
-  b<-max(h)-1
-  k<-1.25
-  if (model=="weibull"){
+fitcurve<-function(h, d, model, start){
+  if ( any( is.na(h) ) )  stop("NAs values are not allowed for height data.")
+  if ( any( is.na(d) ) )  stop("NAs values are not allowed for dbh data.")
+  if(model != "weibull" & model != "probola" & model != "chapman-richards" & model != "logistic" & model != "prodan" & 
+	model != "gompertz" & model != "korf" & model != "sibbesen" & model != "katkowsky" & model != "hossfeldiv" )
+	stop("model's name is not implemented or misspelled. Please check the manual for guidelines.")
+  if(length(start) != 3) stop("length of vector of starting values must be three.")
+  x <- seq( min(d), max(d), 0.01 )
+  a <- min(d) + 11
+  b <- max(h) - 1
+  k <- 1.25
+  if(model=="weibull"){
     relation<-as.formula(h~1.3+beta1*(1-exp(-beta2*d^beta3)))
     f<-function(x,par){
       b1<-par[1]
@@ -95,20 +101,35 @@ fitcurve<-function(h,d,model,starts){
   }
   if (model=="hossfeldiv"){
     relation<-as.formula(h~1.3+beta1/(1+1/(beta2*d^beta3)))
-    f<-function(x,par){
+    f<-function(x, par){
       b1<-par[1]
       b2<-par[2]
       b3<-par[3]
-      1.3+b1/(1+1/(b2*d^b3))
+      1.3+b1/(1+1/(b2*x^b3))
     }
     g<-expression(H==paste(1.3+frac(beta[1],1+frac(1,beta[2]*D^beta[3]))))
   }
-  out<-suppressWarnings(summary(nls(relation,start=list(beta1=starts[1],beta2=starts[2],beta3=starts[3]))))
-  out1<-out$parameters
-  out2<-plot(d,h,main="Height Vs. Diameter",xlab="Diameter (cm)",ylab="Height (m)",cex=k,cex.lab=k,cex.axis=k,col='black',lwd=k)
-  lines(x,f(x,out1[,1]),col='blue',cex=0.5)
+
+it <- 1
+ i <- 0
+while(it <= 1){ 
+random1 <- runif(1, min(0, start[1] - 5), start[1] + 5)
+random2 <- runif(1, min(0, start[2] - 5), start[2] + 5)
+random3 <- runif(1, min(0, start[3] - 5), start[3] + 5)
+out1 <- tryCatch( summary( nls( relation, start = list( beta1 = random1, beta2 = random2, beta3 = random3 ) ) ), 
+	error=function(e)( "fail" )  )
+if( out1[1] == "fail" ){
+	it <- 1
+	}else{
+	it <- 2
+	}
+	i <- i + 1
+}
+  out2 <- plot(d, h, main = "Height Vs. Diameter", xlab = "Diameter (cm)", ylab = "Height (m)", cex = k, cex.lab = k, cex.axis = k, col = 'black', lwd = k )
+  lines(x, f(x, out1$parameters[, 1]), col = 'blue', cex = 0.5)
   text(a,b,g)
-  return(list("summary"=out1,"residuals"=out[[2]],"var-cov"=out[[5]],"residual Std. Error"=out[[3]]))
+  return( list( estimate = out1$parameters, residuals = out1[[2]], 
+"var-cov" = out1[[5]], "residual Std. Error" = out1[[3]], iteration = i) )
   out2
 }
 fitmixturegrouped<-function(family,r,f,K,initial=FALSE,starts){

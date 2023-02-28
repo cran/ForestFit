@@ -26,11 +26,13 @@ L. J. Norman, S. Kotz, and N. Balakrishnan, 1994. \emph{Continuous Univariate Di
 }
 \author{Mahdi Teimouri}
 \examples{
+\donttest{
 # Here we use the SW dataset provided by FIA that represents a typical loblolly pine plantation.
 # As the variable of interest, we fit the JSB distribution to the diameter at breast height (SW$DIA)
 # in inches.
 data(SW)
 data<-SW$DIA
-fitbayesJSB(data, n.burn=20, n.simul=50)
+fitbayesJSB(data, n.burn=4000, n.simul=5000)
+}
 }
 

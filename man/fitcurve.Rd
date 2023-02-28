@@ -1,4 +1,4 @@
-\name{fitcurve}
+﻿\name{fitcurve}
 \alias{fitcurve}
 \title{Estimatinng the parameters of the nonlinear curve  fitted to the height-diameter(H-D) observations}
 \description{Estimates the parameters of the nine well-known nine three-parameter nonlinear curves fitted to the height-diameter observations. These nine models are given by the following.
@@ -13,7 +13,7 @@
 \item Sibbesen     (Huang et al. (1992))              \deqn{H=1.3+\beta_1 D^{\beta_2 D^{-\beta_3}},}
 \item Weibull      (Yang et al. (1978))               \deqn{H=1.3+\beta_1\Bigl(1-e^{-\beta_2 D^{\beta_3}}\Bigr),}
 }}
-\usage{fitcurve(h,d,model,starts)}
+\usage{fitcurve(h,d,model,start)}
 \arguments{
 \item{h}{Vector of height observations.}
 \item{d}{Vector of diameter observations.}
@@ -27,7 +27,7 @@
 "\code{ratkowsky}",
 "\code{Sibbesen}", and
 "\code{weibull}".}
-\item{starts}{A list of starting values for the parameters \eqn{\beta_1}, \eqn{\beta_2}, and \eqn{\beta_3}.}
+\item{start}{A vector of starting values for the parameters \eqn{\beta_1}, \eqn{\beta_2}, and \eqn{\beta_3}.}
 }
 
 %\details{}
@@ -37,6 +37,7 @@
 \item Residuals.
 \item Covariance matrix of the estimated model parameters (coefficients) \eqn{\hat{\beta}_1}, \eqn{\hat{\beta}_2}, and \eqn{\hat{\beta}_3}.
 \item Residual standard error, i.e., \eqn{\hat{\sigma}}.
+\item number of trials for attaining convergence.
 \item The hieght-diameter scatterplot superimposed by the fitted model.
 }
 }
@@ -67,6 +68,6 @@ B. Zeide. 1993. Analysis of growth equation. \emph{Forest Science}, 39, 594-616.
  data(DBH)
  D<-DBH[DBH[,1]==55,10]
  H<-DBH[DBH[,1]==55,11]
- starts<-c(9,0.0005,2)
- fitcurve(H,D,"weibull",starts=starts)
+ start<-c(9,5,2)
+ fitcurve(H,D,"weibull", start=start)
  }
