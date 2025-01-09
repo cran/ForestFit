@@ -24,7 +24,7 @@ where the \eqn{r_0} is the lower bound of the first group, \eqn{r_m} is the uppe
 \value{A two-part list of objects given by the following:
 \enumerate{
 \item Maximum likelihood (ML) estimator for the parameters of the fitted family to the gropued data, asymptotic standard error of the ML estimator, lower bound of the asymptotic confidence interval, and upper bound of the asymptotic confidence interval at the given level.
-\item A sequence of goodness-of-fit measures consist of Anderson-Darling (\code{AD}), Cram\'{e}er-von Misses (\code{CVM}), and Kolmogorov-Smirnov (\code{KS}) statistics.
+\item A sequence of goodness-of-fit measures consist of Anderson-Darling (\code{AD}), Cramer-von Mises (\code{CVM}), and Kolmogorov-Smirnov (\code{KS}) statistics.
 }
 }
 \author{Mahdi Teimouri}

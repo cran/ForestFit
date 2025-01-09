@@ -1,8 +1,8 @@
 fitcurve<-function(h, d, model, start){
   if ( any( is.na(h) ) )  stop("NAs values are not allowed for height data.")
   if ( any( is.na(d) ) )  stop("NAs values are not allowed for dbh data.")
-  if(model != "weibull" & model != "probola" & model != "chapman-richards" & model != "logistic" & model != "prodan" & 
-	model != "gompertz" & model != "korf" & model != "sibbesen" & model != "katkowsky" & model != "hossfeldiv" )
+  if(model != "weibull" & model != "probola" & model != "chapman-richards" & model != "logistic" & model != "prodan" &
+	model != "gompertz" & model != "korf" & model != "sibbesen" & model != "ratkowsky" & model != "hossfeldiv" )
 	stop("model's name is not implemented or misspelled. Please check the manual for guidelines.")
   if(length(start) != 3) stop("length of vector of starting values must be three.")
   x <- seq( min(d), max(d), 0.01 )
@@ -89,7 +89,7 @@ fitcurve<-function(h, d, model, start){
     }
     g<-expression(H==paste(1.3+beta[1]*D^{beta[2]*D^{-beta[3]}}))
   }
-  if (model=="katkowsky"){
+  if (model=="ratkowsky"){
     relation<-as.formula(h~1.3+beta1*e^(-beta2/(d+beta3)))
     f<-function(x,par){
       b1<-par[1]
@@ -112,11 +112,11 @@ fitcurve<-function(h, d, model, start){
 
 it <- 1
  i <- 0
-while(it <= 1){ 
-random1 <- runif(1, min(0, start[1] - 5), start[1] + 5)
-random2 <- runif(1, min(0, start[2] - 5), start[2] + 5)
-random3 <- runif(1, min(0, start[3] - 5), start[3] + 5)
-out1 <- tryCatch( summary( nls( relation, start = list( beta1 = random1, beta2 = random2, beta3 = random3 ) ) ), 
+while(it <= 1){
+random1 <- runif(1, max(0, start[1] - 5), start[1] + 5)
+random2 <- runif(1, max(0, start[2] - 5), start[2] + 5)
+random3 <- runif(1, max(0, start[3] - 5), start[3] + 5)
+out1 <- tryCatch( summary( nls( relation, start = list( beta1 = random1, beta2 = random2, beta3 = random3 ) ) ),
 	error=function(e)( "fail" )  )
 if( out1[1] == "fail" ){
 	it <- 1
@@ -128,7 +128,7 @@ if( out1[1] == "fail" ){
   out2 <- plot(d, h, main = "Height Vs. Diameter", xlab = "Diameter (cm)", ylab = "Height (m)", cex = k, cex.lab = k, cex.axis = k, col = 'black', lwd = k )
   lines(x, f(x, out1$parameters[, 1]), col = 'blue', cex = 0.5)
   text(a,b,g)
-  return( list( estimate = out1$parameters, residuals = out1[[2]], 
+  return( list( estimate = out1$parameters, residuals = out1[[2]],
 "var-cov" = out1[[5]], "residual Std. Error" = out1[[3]], iteration = i) )
   out2
 }
@@ -3071,7 +3071,6 @@ skewtreg<-function(y, x, Fisher=FALSE){
 }
 
 
-
 djsb<-function(data, param, log = FALSE){
   n<-length(data)
   pdf<-rep(NA,n)
@@ -3085,14 +3084,48 @@ djsb<-function(data, param, log = FALSE){
   }
   else
   {
-    for(i in 1:n)
-    {
-      pdf[i]<-suppressWarnings(param[1]*param[3]/(sqrt(2*pi)*(data[i]-param[4])*(param[3]+param[4]-data[i]))*
-                                 exp(-1/2*(param[2]+param[1]*log((data[i]-param[4])/(param[3]+param[4]-data[i])))^2))
-    }
-    suppressWarnings(if(log==TRUE) pdf<-log(pdf))
+pdf <- param[3]/((param[3] + param[4] - data)*(data - param[4]))*dnorm( -log( (param[3] + param[4] - data)/(data - param[4]) ), mean= -param[2]/param[1], sd = 1/param[1], log = FALSE)
+    suppressWarnings( if(log==TRUE) pdf <- log(pdf) )
     return(pdf)
   }
+}
+
+djsbb<-function(data, param, log = FALSE)
+{
+  n   <- ifelse( is.null( dim(data) ), 1, nrow(data) )
+  if( n == 1 ) data <- ( matrix( data, nrow = 1, ncol = length(data) ) )
+  pdf <- rep(NA, n)
+  if(param[1] < 0 || param[3] < 0)
+  {
+    return(message ("Error: either delta[1] or lambda[1] is negative"))
+  }
+  if(any(data[, 1] < param[4]) || any(data[, 1] > param[3] + param[4]))
+  {
+    return (message ("Error: some element(s) of input data first column do not belong to support defined for the Johnson's SBB distribution"))
+  }
+  if(param[5] < 0 || param[7] < 0)
+  {
+    return(message ("Error: either delta[2] or lambda[2] is negative"))
+  }
+  if(any(data[, 2] < param[8]) || any(data[, 2] > param[7] + param[8]))
+  {
+    return (message ("Error: some element(s) of input data second column do not belong to support defined for the Johnson's SBB distribution"))
+  }
+  else
+  {
+    y1  <- param[1]*log( (data[, 1] - param[4])/( param[3] + param[4] - data[, 1] ) ) + param[2]
+    y2  <- param[5]*log( (data[, 2] - param[8])/( param[7] + param[8] - data[, 2] ) ) + param[6]
+    Sigma = matrix( c(1/param[1]^2, param[9]/(param[1]*param[5]), param[9]/(param[1]*param[5]), 1/param[5]^2), nrow = 2, ncol = 2)
+    Y <- cbind(y1, y2)
+
+    pdf <-
+      #param[3]*param[7]*param[1]*param[5]*exp(-mahalanobis(Y, c(0, 2), Sigma)/2)/( 2*pi*sqrt( det(Sigma) ) )
+      param[3]*param[7]*param[1]*param[5]*exp( (- y1^2 + 2*param[9]*y1*y2 - y2^2)/( 2*(1 - param[9]^2) ) )/
+      ( (data[, 1] - param[4])*(data[, 2] - param[8])*(param[3] + param[4] - data[, 1])*(param[7] +
+                                                                                           param[8] - data[, 2])*2*pi*sqrt(1 - param[9]^2) )
+  }
+  suppressWarnings( if(log == TRUE) pdf <- log(pdf) )
+  return(pdf)
 }
 
 pjsb<-function(data, param, log.p = FALSE, lower.tail = TRUE){
@@ -3108,31 +3141,57 @@ pjsb<-function(data, param, log.p = FALSE, lower.tail = TRUE){
   }
   else
   {
-    f<-function(x) param[1]*param[3]/(sqrt(2*pi)*(x-param[4])*(param[3]+param[4]-x))*exp(-1/2*(param[2]+param[1]*log((x-param[4])/(param[3]+param[4]-x)))^2)
-    for(i in 1:n)
-    {
-      cdf[i]<-suppressWarnings(quadinf(f, param[4], data[i])$Q)
-    }
+cdf <- pnorm( -log( (param[3] + param[4] - data)/(data - param[4]) ), mean= -param[2]/param[1],
+ sd = 1/param[1], lower.tail = TRUE, log.p = FALSE)
+}
     if(log.p==TRUE  & lower.tail == FALSE) cdf<-suppressWarnings(log(1-cdf))
     if(log.p==TRUE  & lower.tail == TRUE)  cdf<-suppressWarnings(log(cdf))
     if(log.p==FALSE & lower.tail == FALSE) cdf<-suppressWarnings(1-cdf)
     return(cdf)
-  }
 }
 
+
 rjsb<-function(n, param){
-  data<-rep(NA,n)
+  data<-rep(NA, n)
   if(param[1]<0 || param[3]<0)
   {
     return(message ("Either delta or lambda is negative"))
   }
   else
   {
-    z <- (rnorm(n)-param[2])/param[1]
-    data <- (param[3]*exp(z) + param[4]*(exp(z)+1))/(exp(z)+1)
+    z <- rnorm(n, mean = param[2]/param[1], sd = 1/param[1])
+    data <- param[3]/(1 + exp(z) ) + param[4]
     return(data)
   }
 }
+
+
+rjsbb <- function(n, param)
+{
+  data <- matrix(NA, nrow = n, ncol = 2)
+  Z <- matrix(NA, nrow = n, ncol = 2)
+  Sigma = matrix( c(1/param[1]^2, param[9]/(param[1]*param[5]), param[9]/(param[1]*param[5]), 1/param[5]^2), nrow = 2, ncol = 2)
+  L <- t( chol( Sigma ) )
+  if(param[1]<0 || param[3]<0)
+  {
+    return(message ("Either delta[1] or lambda[1] is negative"))
+  }
+  if(param[5]<0 || param[7]<0)
+  {
+    return(message ("Either delta[2] or lambda[2] is negative"))
+  }
+  if( abs( param[9] ) >= 1)
+  {
+    return(message ("the correlation parameter must be in (-1, 1)"))
+  }
+  else
+  {
+    Z <- rmvnorm(n, c( param[2]/param[1], param[6]/param[5] ), Sigma = Sigma)
+    data <- sweep( sweep(1/( 1 + exp(Z) ), 2, c(param[3], param[7]), FUN = "*"), 2,  c(param[4], param[8] ), FUN = "+" )
+    return(data)
+  }
+}
+
 fitJSB <- function(y, n.burn = 8000, n.simul = 10000)
 {
   stat.JSB <- function(data, hat)
@@ -3254,4 +3313,15 @@ fitJSB <- function(y, n.burn = 8000, n.simul = 10000)
   out <- list( out.estim, out.stat )
   names(out) <- c( paste0("estimate"), paste0("statistic") )
   return( out )
+}
+rmvnorm <- function(n, Mu, Sigma)
+{
+  Dim <- length( Mu )
+    Y <- matrix(NA, nrow = n, ncol = Dim)
+    L <- t( chol( Sigma ) )
+      for(i in 1:n)
+      {
+        Y[i, ] <- L %*% rnorm( Dim ) + Mu
+      }
+    return( Y )
 }

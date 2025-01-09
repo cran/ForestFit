@@ -5,7 +5,8 @@
 \deqn{
 f\bigl(x\big|\Theta\bigr) = \frac {\delta \lambda}{\sqrt{2\pi}(x-\xi)(\lambda+\xi-x)}\exp\Biggl\{-\frac{1}{2}\Bigg[\gamma+\delta\log \biggl(\frac{x-\xi}{\lambda+\xi-x}\biggr) \Bigg]^2\Biggr\},
 }
-where \eqn{\xi<x<\lambda+\xi}, \eqn{\Theta=(\delta,\gamma,\lambda,\xi)^T} with \eqn{\delta, \lambda> 0}, \eqn{-\infty<\gamma<\infty}, and \eqn{-\infty<\xi<\infty}.}
+where \eqn{\xi<x<\lambda+\xi}, \eqn{\Theta=(\delta,\gamma,\lambda,\xi)^T} with \eqn{\delta>0}, \eqn{\lambda> 0}, \eqn{-\infty<\gamma<\infty}, and \eqn{-\infty<\xi<\infty}.
+}
 \usage{rjsb(n, param)}
 \arguments{
 \item{n}{Number of requested random realizations.}

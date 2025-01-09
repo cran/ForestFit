@@ -43,7 +43,7 @@ For the method \code{wml}, all weights have been provided for sample size less t
 \value{A list of objects in two parts given by the following:
 \enumerate{
 \item Estimated parameters for two- or three-parameter Weibull distribution.
-\item A sequence of goodness-of-fit measures consist of Akaike Information Criterion (\code{AIC}), Consistent Akaike Information Criterion (\code{CAIC}), Bayesian Information Criterion (\code{BIC}), Hannan-Quinn information criterion (\code{HQIC}), Anderson-Darling (\code{AD}), Cram\'{e}er-von Misses (\code{CVM}), Kolmogorov-Smirnov (\code{KS}), and log-likelihood (\code{log-likelihood}) statistics.}
+\item A sequence of goodness-of-fit measures consist of Akaike Information Criterion (\code{AIC}), Consistent Akaike Information Criterion (\code{CAIC}), Bayesian Information Criterion (\code{BIC}), Hannan-Quinn information criterion (\code{HQIC}), Anderson-Darling (\code{AD}), Cramer-von Mises (\code{CVM}), Kolmogorov-Smirnov (\code{KS}), and log-likelihood (\code{log-likelihood}) statistics.}
 }
 \references{
 R. C. H. Cheng and M. A. Stephens, 1989. A goodness-of-fit test using Moran's statistic with estimated parameters, \emph{Biometrika}, 76(2), 385-392.

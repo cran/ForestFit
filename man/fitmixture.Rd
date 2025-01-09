@@ -16,7 +16,7 @@ where \eqn{\Theta=(\theta_1,\dots,\theta_K)^T}, is the whole parameter vector, \
 \value{
 \enumerate{
 \item The output has three parts, The first part includes vector of estimated weight, shape, and scale parameters.
-\item The second part involves a sequence of goodness-of-fit measures consist of Akaike Information Criterion (\code{AIC}), Consistent Akaike Information Criterion (\code{CAIC}), Bayesian Information Criterion (\code{BIC}), Hannan-Quinn information criterion (\code{HQIC}), Anderson-Darling (\code{AD}), Cram\'{e}er-von Misses (\code{CVM}), Kolmogorov-Smirnov (\code{KS}), and log-likelihood (\code{log-likelihood}) statistics.
+\item The second part involves a sequence of goodness-of-fit measures consist of Akaike Information Criterion (\code{AIC}), Consistent Akaike Information Criterion (\code{CAIC}), Bayesian Information Criterion (\code{BIC}), Hannan-Quinn information criterion (\code{HQIC}), Anderson-Darling (\code{AD}), Cramer-von Mises (\code{CVM}), Kolmogorov-Smirnov (\code{KS}), and log-likelihood (\code{log-likelihood}) statistics.
 \item The last part of the output contains clustering vector.}
 }
 \references{

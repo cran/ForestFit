@@ -29,7 +29,7 @@ where \eqn{\Theta=(\alpha,\beta,\mu)^T}.}
 \enumerate{
 \item Estimated parameters of the three-parameter GE, Birnbaum-Saunders, or Weibull distribution fitted to the gropued data.
 \item A sequence of goodness-of-fit measures consist of Akaike Information Criterion (\code{AIC}), Consistent Akaike Information Criterion (\code{CAIC}), Bayesian Information Criterion (\code{BIC}), Hannan-Quinn information criterion (\code{HQIC}), Anderson-Darling (\code{AD}), Chi-square (\code{Chi-square}),
-Cram\'{e}er-von Misses (\code{CVM}), Kolmogorov-Smirnov (\code{KS}), and log-likelihood (\code{log-likelihood}) statistics.
+Cramer-von Mises (\code{CVM}), Kolmogorov-Smirnov (\code{KS}), and log-likelihood (\code{log-likelihood}) statistics.
 }
 }
 \references{

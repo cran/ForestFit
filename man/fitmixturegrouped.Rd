@@ -25,7 +25,7 @@ in which \eqn{f(x|\theta_k)} denotes the pdf of the \eqn{j}-th component. Using 
 \value{
 \enumerate{
 \item The output has two parts, The first part includes vector of estimated weight, shape, and scale parameters.
-\item A sequence of goodness-of-fit measures consist of Akaike Information Criterion (\code{AIC}), Consistent Akaike Information Criterion (\code{CAIC}), Bayesian Information Criterion (\code{BIC}), Hannan-Quinn information criterion (\code{HQIC}), Anderson-Darling (\code{AD}), Cram\'{e}er-von Misses (\code{CVM}), Kolmogorov-Smirnov (\code{KS}), and log-likelihood (\code{log-likelihood}) statistics.}
+\item A sequence of goodness-of-fit measures consist of Akaike Information Criterion (\code{AIC}), Consistent Akaike Information Criterion (\code{CAIC}), Bayesian Information Criterion (\code{BIC}), Hannan-Quinn information criterion (\code{HQIC}), Anderson-Darling (\code{AD}), Cramer-von Mises (\code{CVM}), Kolmogorov-Smirnov (\code{KS}), and log-likelihood (\code{log-likelihood}) statistics.}
 }
 \references{
 G. J. McLachlan and P. N. Jones, 1988. Fitting mixture models to grouped and truncated data via the EM algorithm, \emph{Biometrics}, 44, 571-578}

@@ -14,12 +14,15 @@ where \eqn{\xi<x<\lambda+\xi}, \eqn{\Theta=(\delta,\gamma,\lambda,\xi)^T} with \
 }
 %\details{}
 \value{
-A vector of length \code{n}, giving random generated values from JSB distribution.
-}
+A vector of length \code{n}, giving the density function of JSB distribution.}
 %\references{}
 \author{Mahdi Teimouri}
 \examples{
-data<-rnorm(10)
-param<-c(delta<-1, gamma<-3, lambda<-12, xi<-5)
+delta <- 1
+gamma <- 3
+lambda <- 12
+xi <- 5
+param <- c(delta, gamma, lambda, xi)
+data <- rjsb(20, param)
 djsb(data, param, log = FALSE)
 }

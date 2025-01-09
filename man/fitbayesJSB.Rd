@@ -16,7 +16,7 @@ where \eqn{\xi<x<\lambda+\xi}, \eqn{\Theta=(\delta,\gamma,\lambda,\xi)^T} with \
 \value{A list of objects in two parts as
 \enumerate{
 \item Bayes' estimators of the parameters.
-\item A sequence of four goodness-of-fit measures consist of Anderson-Darling (\code{AD}), Cram\'{e}er-von Misses (\code{CVM}), Kolmogorov-Smirnov (\code{KS}), and  log-likelihood (\code{log-likelihood}) statistics.
+\item A sequence of four goodness-of-fit measures consist of Anderson-Darling (\code{AD}), Cramer-von Mises (\code{CVM}), Kolmogorov-Smirnov (\code{KS}), and  log-likelihood (\code{log-likelihood}) statistics.
 }
 }
 \references{

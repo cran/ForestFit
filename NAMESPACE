@@ -1,10 +1,33 @@
-exportPattern("^[[:alpha:]]+")
-importFrom(ars,"ars")
-import(pracma,"pracma")
 importFrom(utils,packageVersion)
-importFrom("stats", "D", "pt", "dt", "splinefun", "nlm", "na.omit", "cor", "var", "median", "quantile", "nlminb", "lm", "sd", "optim", "uniroot", "runif",
-           "dlnorm", "plnorm", "qlnorm", "dweibull", "dexp", "pexp", "pweibull", "rnorm", "dnorm", "pnorm", "qnorm", "dgamma", "pgamma", "rgamma","df", "pf",
-           "rf", "ks.test", "rmultinom", "rweibull", "integrate", "optimize", "kmeans", "dmultinom", "nls", "as.formula")
+importFrom("ars","ars")
+import("pracma","pracma")
+importFrom("stats", "D", "pt", "dt", "splinefun", "nlm", "na.omit", "cor", "var", "median",
+           "quantile", "nlminb", "lm", "sd", "optim", "uniroot", "runif", "dlnorm",
+           "plnorm", "qlnorm", "dweibull", "dexp", "pexp", "pweibull", "rnorm", "dnorm",
+           "pnorm", "qnorm", "dgamma", "pgamma", "rgamma","df", "pf", "rf", "ks.test",
+           "rmultinom", "rweibull", "integrate", "optimize", "kmeans", "dmultinom", "nls",
+           "as.formula")
 importFrom("graphics", "lines", "plot", "text")
 importFrom("grDevices", "pdf")
-
+export(dmixture,
+     djsbb,
+     djsb,
+     dgsm,
+     fitWeibull,
+     fitmixturegrouped,
+     fitmixture,
+     fitJSB,
+     fitgsm,
+     fitgrouped1,
+     fitgrouped2,
+     fitbayesWeibull,
+     fitcurve,
+     fitbayesJSB,
+     pmixture,
+     pjsb,
+     pgsm,
+     rjsbb,
+     rjsb,
+     rgsm,
+     rmixture,
+	   skewtreg)

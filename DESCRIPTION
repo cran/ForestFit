@@ -1,7 +1,9 @@
 Package: ForestFit
 Type: Package
 Title: Statistical Modelling for Plant Size Distributions
-Author: Mahdi Teimouri [aut, cre, cph, ctb] (<https://orcid.org/0000-0002-5371-9364>)
+Authors@R: person('Mahdi', 'Teimouri', email = 'teimouri@aut.ac.ir', role = c('aut', 'cre', 'cph', 'ctb'), comment = c(ORCID = '0000-0002-5371-9364'))
+Author: Mahdi Teimouri [aut, cre, cph, ctb]
+    (<https://orcid.org/0000-0002-5371-9364>)
 Maintainer: Mahdi Teimouri <teimouri@aut.ac.ir>
 Description: Developed for the following tasks. 1 ) Computing the probability density function,
              cumulative distribution function, random generation, and estimating the parameters
@@ -19,19 +21,20 @@ Description: Developed for the following tasks. 1 ) Computing the probability de
 			 realizations from gamma shape mixture model introduced by Venturini et al. (2008)
 			 <doi:10.1214/07-AOAS156> , 8 ) The Bayesian inference, computing probability
 			 density function, cumulative distribution function, and generating realizations
-			 from four-parameter Johnson SB distribution, 9 ) Robust multiple linear regression
-			 analysis when error term follows skewed t distribution, 10 ) Estimating 
+			 from univariate and bivariate Johnson SB distribution, 9 ) Robust multiple linear
+			 regression analysis when error term follows skewed t distribution, 10 ) Estimating 
 			 parameters of a given distribution fitted to grouped data using method of maximum
 			 likelihood, and 11 ) Estimating parameters of the Johnson SB distribution through 
 			 the Bayesian, method of moment, conditional maximum likelihood, and two - percentile 
 			 method.
 Encoding: UTF-8
 License: GPL (>= 2)
-Depends: R(>= 3.3.0)
+Depends: R(>= 3.4.4)
 Imports: ars, pracma
 Repository: CRAN
-Version: 2.2.3
-Date: 2023-02-27
+Version: 2.4.3
+Date: 2025-01-08
 NeedsCompilation: no
-Packaged: 2023-02-27 17:54:48 UTC; NikPardaz
-Date/Publication: 2023-02-28 05:02:29 UTC
+LazyData: true
+Packaged: 2025-01-09 16:50:12 UTC; NikPardaz
+Date/Publication: 2025-01-09 17:30:11 UTC
